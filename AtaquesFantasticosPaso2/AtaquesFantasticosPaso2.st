@@ -38,9 +38,9 @@ distraerse
 enemigos: unConjuntoDeEnemigos
 	enemigos := unConjuntoDeEnemigos select:[:enemigo | enemigo tienePuntosDeVidaRestante].! !
 
-!CombatienteHumanoArthas class methodsFor: 'combate' stamp: 'OO 9/16/2022 18:22:24'!
+!CombatienteHumanoArthas class methodsFor: 'combate' stamp: 'FG 9/19/2022 16:12:38'!
 estaHerido
-	^ (puntosDeVida =(20*pv)) not.! !
+	^ puntosDeVida ~= (20*pv).! !
 
 !CombatienteHumanoArthas class methodsFor: 'combate' stamp: 'OO 9/17/2022 16:21:00'!
 finalizarDistraccion
@@ -62,9 +62,9 @@ modAgilidad
 modFuerza
 	^ 0 *pv.! !
 
-!CombatienteHumanoArthas class methodsFor: 'combate' stamp: 'OO 9/16/2022 18:18:48'!
+!CombatienteHumanoArthas class methodsFor: 'combate' stamp: 'FG 9/19/2022 16:07:37'!
 noEstaHerido
-	^ puntosDeVida  = (20*pv).! !
+	^ self estaHerido not.! !
 
 !CombatienteHumanoArthas class methodsFor: 'combate' stamp: 'OO 9/17/2022 17:33:53'!
 prepararseParaElCombate
@@ -114,7 +114,7 @@ usarHacha
 	dañoAInfligir := 10*pv.! !
 
 
-!CombatienteHumanoArthas class methodsFor: '--** private fileout/in **--' stamp: 'FG 9/17/2022 20:39:41'!
+!CombatienteHumanoArthas class methodsFor: '--** private fileout/in **--' stamp: 'FG 9/19/2022 16:42:41'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
@@ -124,7 +124,7 @@ initializeCollaboratorsFromFile
 	dañoAAbsorber := (SimpleMeasure basicNew instVarAt: 1 put: 0; instVarAt: 2 put: (BaseUnit basicNew instVarAt: 1 put: 'puntosDeVida'; instVarAt: 2 put: 'puntosDeVidas'; instVarAt: 3 put: 'pv'; yourself); yourself).
 	dañoAInfligir := (SimpleMeasure basicNew instVarAt: 1 put: 2; instVarAt: 2 put: (BaseUnit basicNew instVarAt: 1 put: 'puntosDeVida'; instVarAt: 2 put: 'puntosDeVidas'; instVarAt: 3 put: 'pv'; yourself); yourself).
 	puntosDeVida := (SimpleMeasure basicNew instVarAt: 1 put: 20; instVarAt: 2 put: (BaseUnit basicNew instVarAt: 1 put: 'puntosDeVida'; instVarAt: 2 put: 'puntosDeVidas'; instVarAt: 3 put: 'pv'; yourself); yourself).
-	enemigos := ((Array new: 2) at: 1 put: CombatienteOrcoOlgra; at: 2 put: CombatienteOrcoMankrik; yourself).
+	enemigos := #().
 	dañoARecibirPorDistraido := (SimpleMeasure basicNew instVarAt: 1 put: 0; instVarAt: 2 put: (BaseUnit basicNew instVarAt: 1 put: 'puntosDeVida'; instVarAt: 2 put: 'puntosDeVidas'; instVarAt: 3 put: 'pv'; yourself); yourself).! !
 
 
@@ -150,7 +150,7 @@ modFuerza
 	^2*pv.! !
 
 
-!CombatienteOrcoMankrik class methodsFor: '--** private fileout/in **--' stamp: 'FG 9/17/2022 20:39:41'!
+!CombatienteOrcoMankrik class methodsFor: '--** private fileout/in **--' stamp: 'FG 9/19/2022 16:42:41'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
@@ -186,7 +186,7 @@ modFuerza
 	^1*pv.! !
 
 
-!CombatienteOrcoOlgra class methodsFor: '--** private fileout/in **--' stamp: 'FG 9/17/2022 20:39:41'!
+!CombatienteOrcoOlgra class methodsFor: '--** private fileout/in **--' stamp: 'FG 9/19/2022 16:42:41'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
@@ -195,7 +195,7 @@ initializeCollaboratorsFromFile
 	estaDistraido := nil.
 	dañoAAbsorber := (SimpleMeasure basicNew instVarAt: 1 put: 0; instVarAt: 2 put: (BaseUnit basicNew instVarAt: 1 put: 'puntosDeVida'; instVarAt: 2 put: 'puntosDeVidas'; instVarAt: 3 put: 'pv'; yourself); yourself).
 	dañoAInfligir := (SimpleMeasure basicNew instVarAt: 1 put: 2; instVarAt: 2 put: (BaseUnit basicNew instVarAt: 1 put: 'puntosDeVida'; instVarAt: 2 put: 'puntosDeVidas'; instVarAt: 3 put: 'pv'; yourself); yourself).
-	puntosDeVida := (SimpleMeasure basicNew instVarAt: 1 put: 18; instVarAt: 2 put: (BaseUnit basicNew instVarAt: 1 put: 'puntosDeVida'; instVarAt: 2 put: 'puntosDeVidas'; instVarAt: 3 put: 'pv'; yourself); yourself).
+	puntosDeVida := (SimpleMeasure basicNew instVarAt: 1 put: 16; instVarAt: 2 put: (BaseUnit basicNew instVarAt: 1 put: 'puntosDeVida'; instVarAt: 2 put: 'puntosDeVidas'; instVarAt: 3 put: 'pv'; yourself); yourself).
 	enemigos := #().
 	dañoARecibirPorDistraido := (SimpleMeasure basicNew instVarAt: 1 put: 0; instVarAt: 2 put: (BaseUnit basicNew instVarAt: 1 put: 'puntosDeVida'; instVarAt: 2 put: 'puntosDeVidas'; instVarAt: 3 put: 'pv'; yourself); yourself).! !
 
@@ -730,18 +730,17 @@ desarrollarDuranteRondas: cantidadDeRondasPedidas
 			
 			! !
 
-!OrquestadorDeCombates class methodsFor: 'combates' stamp: 'FG 9/17/2022 19:45:59'!
+!OrquestadorDeCombates class methodsFor: 'combates' stamp: 'FG 9/19/2022 16:26:07'!
 determinarVencedor
 	|restantesEquipo1 restantesEquipo2|
 	restantesEquipo1 := equipo1 select: [:combatiente| combatiente tienePuntosDeVidaRestante].
 	restantesEquipo2 := equipo2 select: [:combatiente| combatiente tienePuntosDeVidaRestante].
-	(restantesEquipo1 isEmpty and: restantesEquipo2 isEmpty not) ifTrue: [^2].
-	(restantesEquipo2 isEmpty and: restantesEquipo1 isEmpty not) ifTrue: [^1].
-	^0.	! !
+	(restantesEquipo1 isEmpty and: restantesEquipo2 isEmpty not) ifTrue: [^self reporteDeCombate ganadorEquipo2].
+	(restantesEquipo2 isEmpty and: restantesEquipo1 isEmpty not) ifTrue: [^self reporteDeCombate ganadorEquipo1].
+	^self reporteDeCombate noHayGanador.! !
 
-!OrquestadorDeCombates class methodsFor: 'combates' stamp: 'FG 9/17/2022 19:10:41'!
+!OrquestadorDeCombates class methodsFor: 'combates' stamp: 'FG 9/19/2022 16:24:44'!
 ejecutarAtaques
-
 	equipo1 do:[:combatiente| combatiente atacar].
 	equipo2 do:[:combatiente| combatiente atacar].! !
 
@@ -768,7 +767,7 @@ reporteDeCombate
 	^ReporteDeCombate! !
 
 
-!OrquestadorDeCombates class methodsFor: '--** private fileout/in **--' stamp: 'FG 9/17/2022 20:39:41'!
+!OrquestadorDeCombates class methodsFor: '--** private fileout/in **--' stamp: 'FG 9/19/2022 16:42:41'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
@@ -1093,7 +1092,7 @@ noHayGanador
 	^0! !
 
 
-!ReporteDeCombate class methodsFor: '--** private fileout/in **--' stamp: 'FG 9/17/2022 20:39:41'!
+!ReporteDeCombate class methodsFor: '--** private fileout/in **--' stamp: 'FG 9/19/2022 16:42:41'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
