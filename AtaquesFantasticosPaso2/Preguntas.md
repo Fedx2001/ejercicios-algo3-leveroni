@@ -14,4 +14,5 @@
 
 2. Que no es necesario porque todos los combatientes se comportan de la misma forma, y si definimos, por ejemplo, a Arthas como el prototipo, el resto de los combatientes tienen el mismo comportamiento por defecto. De igual manera, estos tests del mismo comportamiento son utiles en caso de que no conozcamos la implementacion desarrollada.
 
-3. Desde un principio, entretuvimos la idea de que el resultado fuese un objeto suponiendo que tendría que saber responder la pregunta de "¿quién es el ganador?"
+3. Desde un principio, entretuvimos la idea de que el resultado fuese un objeto suponiendo que tendría que saber responder la pregunta de "¿quién es el ganador?" y "¿cuantas rondas transcurrieron?" y, los resultados de estas preguntas los igualabamos a valores arbitrarios esperados (en los assert). Pero luego esta idea se descartó ya que rompía el encapsulamiento.
+Ante esta problematica se implementaron mensajes (que el objeto resultado supiera responder) que informaban directamente un valor de verdad. Un ejemplo es en el primer assert donde se necesitaba saber si gano el primer bando, ante lo cual el objeto resultado es el encargado de responder esta pregunta. 
