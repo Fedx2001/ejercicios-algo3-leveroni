@@ -29,10 +29,10 @@ test01AddingCustomerShouldNotTakeMoreThan50Milliseconds
 	self assertThatRunningThisBlock: [ customerBook addCustomerNamed: 'John Lennon' ] takesLessThan: (50 * millisecond).
 ! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'OO 9/24/2022 11:44:28'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'FG 9/24/2022 15:34:19'!
 test02RemovingCustomerShouldNotTakeMoreThan100Milliseconds
 
-	| customerBook|
+	| customerBook |
 	customerBook := self createNewCustomerBookWithCustomer: 'Paul McCartney'.
 	self assertThatRunningThisBlock: [customerBook removeCustomerNamed: 'Paul McCartney' ] takesLessThan: (100 * millisecond).
 	
@@ -178,10 +178,10 @@ Object subclass: #CustomerBook
 	poolDictionaries: ''
 	category: 'CodigoRepetido-Ejercicio'!
 
-!CustomerBook methodsFor: 'testing' stamp: 'NR 4/3/2019 10:14:26'!
+!CustomerBook methodsFor: 'testing' stamp: 'FG 9/24/2022 15:52:14'!
 includesCustomerNamed: aName
 
-	^(active includes: aName) or: [ suspended includes: aName ]! !
+	^(self hasAnActiveCustomerNamed: aName) or: [ self hasASuspendedCustomerNamed: aName ]! !
 
 !CustomerBook methodsFor: 'testing' stamp: 'NR 4/3/2019 10:14:26'!
 isEmpty
@@ -197,13 +197,24 @@ initialize
 	suspended:= OrderedCollection new.! !
 
 
-!CustomerBook methodsFor: 'customer management' stamp: 'NR 4/3/2019 10:14:26'!
+!CustomerBook methodsFor: 'customer management' stamp: 'FG 9/24/2022 15:36:04'!
 addCustomerNamed: aName
 
 	aName isEmpty ifTrue: [ self signalCustomerNameCannotBeEmpty ].
-	((active includes: aName) or: [suspended includes: aName]) ifTrue: [ self signalCustomerAlreadyExists ].
+	(self includesCustomerNamed: aName) ifTrue: [ self signalCustomerAlreadyExists ].
 	
 	active add: aName ! !
+
+!CustomerBook methodsFor: 'customer management' stamp: 'FG 9/24/2022 15:55:23'!
+hasASuspendedCustomerNamed: aName
+
+	^suspended includes: aName! !
+
+!CustomerBook methodsFor: 'customer management' stamp: 'FG 9/24/2022 15:52:57'!
+hasAnActiveCustomerNamed: aName 
+	
+	^active includes: aName
+! !
 
 !CustomerBook methodsFor: 'customer management' stamp: 'NR 4/3/2019 10:14:26'!
 numberOfActiveCustomers
@@ -220,28 +231,19 @@ numberOfSuspendedCustomers
 	
 	^suspended size! !
 
-!CustomerBook methodsFor: 'customer management' stamp: 'NR 4/3/2019 10:14:26'!
+!CustomerBook methodsFor: 'customer management' stamp: 'FG 9/24/2022 16:20:04'!
 removeCustomerNamed: aName 
- 
-	1 to: active size do: 
-	[ :index |
-		aName = (active at: index)
-			ifTrue: [
-				active removeAt: index.
-				^ aName 
-			] 
-	].
 
-	1 to: suspended size do: 	
-	[ :index |
-		aName = (suspended at: index)
-			ifTrue: [
-				suspended removeAt: index.
-				^ aName 
-			] 
-	].
+	^self removeFromActiveOrSuspendedACustomerNamed: aName
+! !
+
+!CustomerBook methodsFor: 'customer management' stamp: 'FG 9/24/2022 16:34:29'!
+removeFromActiveOrSuspendedACustomerNamed: aName
 	
-	^ NotFound signal.
+	^active remove: aName 
+		    ifAbsent: [ 
+			suspended remove: aName ifAbsent: [ ^NotFound signal ]
+		    ]
 ! !
 
 !CustomerBook methodsFor: 'customer management' stamp: 'HernanWilkinson 7/6/2011 17:52'!
@@ -254,10 +256,10 @@ signalCustomerNameCannotBeEmpty
 
 	self error: self class customerCanNotBeEmptyErrorMessage ! !
 
-!CustomerBook methodsFor: 'customer management' stamp: 'NR 4/3/2019 10:14:26'!
+!CustomerBook methodsFor: 'customer management' stamp: 'FG 9/24/2022 15:52:29'!
 suspendCustomerNamed: aName 
 	
-	(active includes: aName) ifFalse: [^CantSuspend signal].
+	(self hasAnActiveCustomerNamed: aName) ifFalse: [^CantSuspend signal].
 	
 	active remove: aName.
 	
