@@ -28,7 +28,7 @@ test01AddingCustomerShouldNotTakeMoreThan50Milliseconds
 	customerBook := CustomerBook new.	
 	self should: [ customerBook addCustomerNamed: 'John Lennon' ] notTakeMoreThan: 50 milliSeconds.! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'OO 9/27/2022 13:30:43'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'OO 9/27/2022 16:31:27'!
 test02RemovingCustomerShouldNotTakeMoreThan100Milliseconds
 
 	| customerBook |
@@ -86,31 +86,25 @@ test06RemovingASuspendedCustomerShouldRemoveItFromCustomerBook
 	
 ! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'OO 9/27/2022 13:33:07'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'OO 9/27/2022 16:27:14'!
 test07CanNotSuspendAnInvalidCustomer
 
 	| customerBook |
 			
 	customerBook := CustomerBook newWithCustomerNamed: 'John Lennon'.
-		
-	self assertThatThisBlock: [ customerBook suspendCustomerNamed: 'Ringo Starr'. ] 
-	      raisesAnErrorOfType: CantSuspend
-	      andCompliesWith: [ :anError | 
-					     self assertThereIsOneCustomerAndItIsJohnLennonInTheCustomerBook: customerBook
-					   ].! !
+	
+	self assertThatsuspendingThisCustomer: 'Ringo Starr'
+		 raisesCantSuspendErrorAndDoesNotMakeChangesToThisBook: 		customerBook.! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'OO 9/27/2022 13:33:27'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'OO 9/27/2022 16:27:54'!
 test08CanNotSuspendAnAlreadySuspendedCustomer
 
 	| customerBook johnLennon |
 	johnLennon := 'John Lennon'.
 	customerBook := CustomerBook newWithCustomerNamed: johnLennon.
 	customerBook suspendCustomerNamed: johnLennon.
-	self assertThatThisBlock: [ customerBook suspendCustomerNamed: johnLennon. ] 
-	      raisesAnErrorOfType: CantSuspend
-	      andCompliesWith: [ :anError | 
-					     self assertThereIsOneCustomerAndItIsJohnLennonInTheCustomerBook: customerBook
-					   ].! !
+	self assertThatsuspendingThisCustomer: johnLennon
+		 raisesCantSuspendErrorAndDoesNotMakeChangesToThisBook: 		customerBook.! !
 
 
 !CustomerBookTest methodsFor: 'asserts' stamp: 'OO 9/27/2022 13:33:45'!
@@ -126,6 +120,16 @@ assertThatThisBlock: aBlockToEvaluate raisesAnErrorOfType: errorType andComplies
 	self should: [ aBlockToEvaluate value. self fail ]
 	     raise: errorType
 	     withExceptionDo: aConditionBlock.! !
+
+!CustomerBookTest methodsFor: 'asserts' stamp: 'OO 9/27/2022 16:25:45'!
+assertThatsuspendingThisCustomer: custumerName raisesCantSuspendErrorAndDoesNotMakeChangesToThisBook: customerBook
+
+	self assertThatThisBlock: [ customerBook suspendCustomerNamed: custumerName. ] 
+	      raisesAnErrorOfType: CantSuspend
+	      andCompliesWith: [ :anError | 
+					     self assertThereIsOneCustomerAndItIsJohnLennonInTheCustomerBook: customerBook
+					   ].
+! !
 
 !CustomerBookTest methodsFor: 'asserts' stamp: 'OO 9/27/2022 13:33:56'!
 assertThereIsOneCustomerAndItIsJohnLennonInTheCustomerBook: aCustomerBook
@@ -196,17 +200,12 @@ numberOfCustomers
 numberOfSuspendedCustomers
 	^suspended size! !
 
-!CustomerBook methodsFor: 'customer management' stamp: 'OO 9/27/2022 13:36:19'!
-removeActiveOrSuspendedCustomerNamed: aName
-	^active remove: aName 
+!CustomerBook methodsFor: 'customer management' stamp: 'OO 9/27/2022 16:38:59'!
+removeCustomerNamed: aName 
+		^active remove: aName 
 		    ifAbsent: [ 
 			suspended remove: aName ifAbsent: [ ^NotFound signal ]
 		    ]
-! !
-
-!CustomerBook methodsFor: 'customer management' stamp: 'OO 9/27/2022 13:36:27'!
-removeCustomerNamed: aName 
-	^self removeActiveOrSuspendedCustomerNamed: aName
 ! !
 
 !CustomerBook methodsFor: 'customer management' stamp: 'OO 9/27/2022 13:36:33'!
@@ -234,23 +233,18 @@ verifyAndSignalANameIsValidAndItDoesNotExistInTheBookForTheName: aName
 CustomerBook class
 	instanceVariableNames: ''!
 
-!CustomerBook class methodsFor: 'error messages' stamp: 'NR 4/30/2020 09:05:18'!
+!CustomerBook class methodsFor: 'error messages' stamp: 'OO 9/27/2022 16:33:09'!
 customerAlreadyExistsErrorMessage
-
 	^'Customer Already Exists'! !
 
-!CustomerBook class methodsFor: 'error messages' stamp: 'NR 4/30/2020 09:05:25'!
+!CustomerBook class methodsFor: 'error messages' stamp: 'OO 9/27/2022 16:33:14'!
 customerCanNotBeEmptyErrorMessage
-
 	^'Customer Name Cannot Be Empty'! !
 
 
-!CustomerBook class methodsFor: 'instance creation' stamp: 'FG 9/25/2022 12:44:06'!
+!CustomerBook class methodsFor: 'instance creation' stamp: 'OO 9/27/2022 16:32:59'!
 newWithCustomerNamed: aName
-
 	| customerBook |
-
 	customerBook := self new.
 	customerBook addCustomerNamed: aName.
-	
 	^customerBook! !
