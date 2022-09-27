@@ -119,9 +119,10 @@ assertCustomerCanNotBeEmptyErrorMessageIsEqualToMessageTextOfTheError: anError a
 	self assert: anError messageText = CustomerBook customerCanNotBeEmptyErrorMessage.
 	self assert: customerBook isEmpty! !
 
-!CustomerBookTest methodsFor: 'asserts' stamp: 'OO 9/27/2022 13:38:12'!
+!CustomerBookTest methodsFor: 'asserts' stamp: 'FG 9/27/2022 16:01:15'!
 assertThatThisBlock: aBlockToEvaluate raisesAnErrorOfType: errorType andCompliesWith: aConditionBlock
-	
+
+
 	self should: [ aBlockToEvaluate value. self fail ]
 	     raise: errorType
 	     withExceptionDo: aConditionBlock.! !
