@@ -455,10 +455,10 @@ addToEntero: anEntero
 	^Entero with: value + anEntero integerValue.
 	! !
 
-!Entero methodsFor: 'arithmetic operations - dd' stamp: 'FG 9/30/2022 22:05:37'!
+!Entero methodsFor: 'arithmetic operations - dd' stamp: 'FG 10/2/2022 17:23:07'!
 addToFraccion: aFraccion
 
-	^Fraccion with: ((self * aFraccion denominator) + aFraccion numerator) over: (aFraccion denominator).
+	^aFraccion addToEntero: self.
 	! !
 
 !Entero methodsFor: 'arithmetic operations - dd' stamp: 'FG 9/30/2022 22:05:49'!
@@ -476,10 +476,10 @@ multiplyToEntero: anEntero
 	
 	^Entero with: anEntero integerValue * self integerValue.! !
 
-!Entero methodsFor: 'arithmetic operations - dd' stamp: 'FG 9/30/2022 22:06:05'!
+!Entero methodsFor: 'arithmetic operations - dd' stamp: 'FG 10/2/2022 17:23:21'!
 multiplyToFraccion: aFraccion
 	
-	^(self * aFraccion numerator) / (aFraccion denominator).! !
+	^aFraccion multiplyToEntero: self.! !
 
 !Entero methodsFor: 'arithmetic operations - dd' stamp: 'OO 10/1/2022 16:35:27'!
 substractToEntero: anEntero
@@ -527,9 +527,10 @@ fibonacci
 EnteroNegativo class
 	instanceVariableNames: ''!
 
-!EnteroNegativo class methodsFor: 'instance creation' stamp: 'OO 10/1/2022 16:23:14'!
+!EnteroNegativo class methodsFor: 'private' stamp: 'OO 10/1/2022 16:23:14'!
 represents: aValue
 	 ^aValue negative.! !
+
 
 !EnteroNegativo class methodsFor: 'instance creation' stamp: 'OO 10/1/2022 19:55:22'!
 with: aValue
@@ -554,9 +555,10 @@ fibonacci
 EnteroPositivo class
 	instanceVariableNames: ''!
 
-!EnteroPositivo class methodsFor: 'instance creation' stamp: 'OO 10/1/2022 20:20:39'!
+!EnteroPositivo class methodsFor: 'private' stamp: 'OO 10/1/2022 20:20:39'!
 represents: aValue
 	 ^aValue positive.! !
+
 
 !EnteroPositivo class methodsFor: 'instance creation' stamp: 'OO 10/1/2022 19:59:27'!
 with: aValue
@@ -580,7 +582,7 @@ fibonacci
 EnteroPositivoCero class
 	instanceVariableNames: ''!
 
-!EnteroPositivoCero class methodsFor: 'instance creation' stamp: 'OO 10/1/2022 19:57:20'!
+!EnteroPositivoCero class methodsFor: 'private' stamp: 'OO 10/1/2022 19:57:20'!
 represents: aValue
 	 ^aValue = 0.! !
 
@@ -605,7 +607,7 @@ fibonacci
 EnteroPositivoMayorAUno class
 	instanceVariableNames: ''!
 
-!EnteroPositivoMayorAUno class methodsFor: 'instance creation' stamp: 'OO 10/1/2022 19:57:38'!
+!EnteroPositivoMayorAUno class methodsFor: 'private' stamp: 'OO 10/1/2022 19:57:38'!
 represents: aValue
 	 ^aValue > 1.! !
 
@@ -627,7 +629,7 @@ fibonacci
 EnteroPositivoUno class
 	instanceVariableNames: ''!
 
-!EnteroPositivoUno class methodsFor: 'instance creation' stamp: 'OO 10/1/2022 19:57:51'!
+!EnteroPositivoUno class methodsFor: 'private' stamp: 'OO 10/1/2022 19:57:51'!
 represents: aValue
 	 ^aValue = 1.! !
 
@@ -766,21 +768,185 @@ substractToFraccion: aFraccion
 Fraccion class
 	instanceVariableNames: ''!
 
-!Fraccion class methodsFor: 'intance creation' stamp: 'NR 9/23/2018 23:45:19'!
+!Fraccion class methodsFor: 'private' stamp: 'FG 10/2/2022 17:26:50'!
+createFraccionWith: aDividend over: aDivisor
+	self subclassResponsibility.
+! !
+
+!Fraccion class methodsFor: 'private' stamp: 'OO 10/2/2022 10:54:21'!
+representsTheFraccion: aDividend over: aDivisor
+	self subclassResponsibility.! !
+
+
+!Fraccion class methodsFor: 'instance creation' stamp: 'FG 10/2/2022 17:26:50'!
 with: aDividend over: aDivisor
 
-	| greatestCommonDivisor numerator denominator |
-	
-	aDivisor isZero ifTrue: [ self error: self canNotDivideByZeroErrorDescription ].
-	aDividend isZero ifTrue: [ ^aDividend ].
-	
-	aDivisor isNegative ifTrue:[ ^aDividend negated / aDivisor negated].
-	
-	greatestCommonDivisor := aDividend greatestCommonDivisorWith: aDivisor. 
-	numerator := aDividend // greatestCommonDivisor.
-	denominator := aDivisor // greatestCommonDivisor.
-	
-	denominator isOne ifTrue: [ ^numerator ].
+		^(self allSubclasses detect: [:subclass |subclass representsTheFraccion: aDividend over: aDivisor ]) 
+						  createFraccionWith: aDividend over: aDivisor.! !
 
-	^self new initializeWith: numerator over: denominator
-	! !
+
+!classDefinition: #FraccionInvalida category: 'Numeros-Parte2-Ejercicio'!
+Fraccion subclass: #FraccionInvalida
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Numeros-Parte2-Ejercicio'!
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'FraccionInvalida class' category: 'Numeros-Parte2-Ejercicio'!
+FraccionInvalida class
+	instanceVariableNames: ''!
+
+!FraccionInvalida class methodsFor: 'private' stamp: 'FG 10/2/2022 17:26:50'!
+createFraccionWith: aDividend over: aDivisor
+	self error: Entero canNotDivideByZeroErrorDescription.
+! !
+
+!FraccionInvalida class methodsFor: 'private' stamp: 'OO 10/2/2022 10:54:45'!
+representsTheFraccion: aDividend over: aDivisor
+	^aDivisor isZero.! !
+
+
+!classDefinition: #FraccionValida category: 'Numeros-Parte2-Ejercicio'!
+Fraccion subclass: #FraccionValida
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Numeros-Parte2-Ejercicio'!
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'FraccionValida class' category: 'Numeros-Parte2-Ejercicio'!
+FraccionValida class
+	instanceVariableNames: ''!
+
+!FraccionValida class methodsFor: 'private' stamp: 'FG 10/2/2022 17:26:50'!
+createFraccionWith: aDividend over: aDivisor
+	self subclassResponsibility.! !
+
+!FraccionValida class methodsFor: 'private' stamp: 'OO 10/2/2022 12:14:08'!
+representsTheFraccion: aDividend over: aDivisor
+	^false.! !
+
+
+!classDefinition: #FraccionCero category: 'Numeros-Parte2-Ejercicio'!
+FraccionValida subclass: #FraccionCero
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Numeros-Parte2-Ejercicio'!
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'FraccionCero class' category: 'Numeros-Parte2-Ejercicio'!
+FraccionCero class
+	instanceVariableNames: ''!
+
+!FraccionCero class methodsFor: 'private' stamp: 'FG 10/2/2022 17:26:50'!
+createFraccionWith: aDividend over: aDivisor
+	^aDividend.! !
+
+!FraccionCero class methodsFor: 'private' stamp: 'OO 10/2/2022 11:58:57'!
+representsTheFraccion: aDividend over: aDivisor
+	^aDividend isZero.! !
+
+
+!classDefinition: #FraccionDenominadorNegativo category: 'Numeros-Parte2-Ejercicio'!
+FraccionValida subclass: #FraccionDenominadorNegativo
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Numeros-Parte2-Ejercicio'!
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'FraccionDenominadorNegativo class' category: 'Numeros-Parte2-Ejercicio'!
+FraccionDenominadorNegativo class
+	instanceVariableNames: ''!
+
+!FraccionDenominadorNegativo class methodsFor: 'private' stamp: 'FG 10/2/2022 17:26:50'!
+createFraccionWith: aDividend over: aDivisor
+	^aDividend negated / aDivisor negated.! !
+
+!FraccionDenominadorNegativo class methodsFor: 'private' stamp: 'OO 10/2/2022 11:59:31'!
+representsTheFraccion: aDividend over: aDivisor
+	^aDivisor isNegative.! !
+
+
+!classDefinition: #FraccionNumeradorPositivoONegativo category: 'Numeros-Parte2-Ejercicio'!
+FraccionValida subclass: #FraccionNumeradorPositivoONegativo
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Numeros-Parte2-Ejercicio'!
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'FraccionNumeradorPositivoONegativo class' category: 'Numeros-Parte2-Ejercicio'!
+FraccionNumeradorPositivoONegativo class
+	instanceVariableNames: ''!
+
+!FraccionNumeradorPositivoONegativo class methodsFor: 'private' stamp: 'FG 10/2/2022 17:25:35'!
+simplifiedFraccionDenominatorof: aDividend over: aDivisor
+	
+	^aDivisor // (aDividend greatestCommonDivisorWith: aDivisor).! !
+
+!FraccionNumeradorPositivoONegativo class methodsFor: 'private' stamp: 'FG 10/2/2022 17:25:43'!
+simplifiedFraccionNumeratorof: aDividend over: aDivisor
+	
+	^aDividend // (aDividend greatestCommonDivisorWith: aDivisor).! !
+
+
+!FraccionNumeradorPositivoONegativo class methodsFor: 'instance creation' stamp: 'FG 10/2/2022 17:26:50'!
+createFraccionWith: aDividend over: aDivisor
+	self subclassResponsibility.! !
+
+!FraccionNumeradorPositivoONegativo class methodsFor: 'instance creation' stamp: 'OO 10/2/2022 12:39:10'!
+representsTheFraccion: aDividend over: aDivisor
+	^false.! !
+
+
+!classDefinition: #FraccionDenominadorDiferenteDeUno category: 'Numeros-Parte2-Ejercicio'!
+FraccionNumeradorPositivoONegativo subclass: #FraccionDenominadorDiferenteDeUno
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Numeros-Parte2-Ejercicio'!
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'FraccionDenominadorDiferenteDeUno class' category: 'Numeros-Parte2-Ejercicio'!
+FraccionDenominadorDiferenteDeUno class
+	instanceVariableNames: ''!
+
+!FraccionDenominadorDiferenteDeUno class methodsFor: 'private' stamp: 'FG 10/2/2022 17:26:50'!
+createFraccionWith: aDividend over: aDivisor
+	^self new initializeWith: (self simplifiedFraccionNumeratorof: aDividend over:aDivisor )
+			  over: (self simplifiedFraccionDenominatorof: aDividend over: aDivisor )! !
+
+!FraccionDenominadorDiferenteDeUno class methodsFor: 'private' stamp: 'OO 10/2/2022 13:03:13'!
+representsTheFraccion: aDividend over: aDivisor
+	^(self simplifiedFraccionDenominatorof: aDividend  over: aDivisor) isOne not.! !
+
+
+!classDefinition: #FraccionDenominadorUno category: 'Numeros-Parte2-Ejercicio'!
+FraccionNumeradorPositivoONegativo subclass: #FraccionDenominadorUno
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Numeros-Parte2-Ejercicio'!
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'FraccionDenominadorUno class' category: 'Numeros-Parte2-Ejercicio'!
+FraccionDenominadorUno class
+	instanceVariableNames: ''!
+
+!FraccionDenominadorUno class methodsFor: 'private' stamp: 'FG 10/2/2022 17:26:50'!
+createFraccionWith: aDividend over: aDivisor
+	^self simplifiedFraccionNumeratorof: aDividend over: aDivisor! !
+
+!FraccionDenominadorUno class methodsFor: 'private' stamp: 'OO 10/2/2022 13:03:37'!
+representsTheFraccion: aDividend over: aDivisor
+	^(self simplifiedFraccionDenominatorof: aDividend  over: aDivisor) isOne! !
