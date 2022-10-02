@@ -795,12 +795,12 @@ Fraccion subclass: #FraccionInvalida
 FraccionInvalida class
 	instanceVariableNames: ''!
 
-!FraccionInvalida class methodsFor: 'as yet unclassified' stamp: 'OO 10/2/2022 11:54:18'!
+!FraccionInvalida class methodsFor: 'instance creation' stamp: 'OO 10/2/2022 11:54:18'!
 crearFraccionCon: aDividend y: aDivisor
 	self error: Entero canNotDivideByZeroErrorDescription.
 ! !
 
-!FraccionInvalida class methodsFor: 'as yet unclassified' stamp: 'OO 10/2/2022 10:54:45'!
+!FraccionInvalida class methodsFor: 'instance creation' stamp: 'OO 10/2/2022 10:54:45'!
 representsTheFraccion: aDividend over: aDivisor
 	^aDivisor isZero.! !
 
@@ -818,11 +818,11 @@ Fraccion subclass: #FraccionValida
 FraccionValida class
 	instanceVariableNames: ''!
 
-!FraccionValida class methodsFor: 'as yet unclassified' stamp: 'OO 10/2/2022 12:13:51'!
+!FraccionValida class methodsFor: 'instance creation' stamp: 'OO 10/2/2022 12:13:51'!
 crearFraccionCon: aDividend y: aDivisor
 	self subclassResponsibility.! !
 
-!FraccionValida class methodsFor: 'as yet unclassified' stamp: 'OO 10/2/2022 12:14:08'!
+!FraccionValida class methodsFor: 'instance creation' stamp: 'OO 10/2/2022 12:14:08'!
 representsTheFraccion: aDividend over: aDivisor
 	^false.! !
 
@@ -840,11 +840,11 @@ FraccionValida subclass: #FraccionCero
 FraccionCero class
 	instanceVariableNames: ''!
 
-!FraccionCero class methodsFor: 'as yet unclassified' stamp: 'OO 10/2/2022 11:09:42'!
+!FraccionCero class methodsFor: 'instance creation' stamp: 'OO 10/2/2022 11:09:42'!
 crearFraccionCon: aDividend y: aDivisor
 	^aDividend.! !
 
-!FraccionCero class methodsFor: 'as yet unclassified' stamp: 'OO 10/2/2022 11:58:57'!
+!FraccionCero class methodsFor: 'instance creation' stamp: 'OO 10/2/2022 11:58:57'!
 representsTheFraccion: aDividend over: aDivisor
 	^aDividend isZero.! !
 
@@ -862,11 +862,11 @@ FraccionValida subclass: #FraccionDenominadorNegativo
 FraccionDenominadorNegativo class
 	instanceVariableNames: ''!
 
-!FraccionDenominadorNegativo class methodsFor: 'as yet unclassified' stamp: 'OO 10/2/2022 11:10:48'!
+!FraccionDenominadorNegativo class methodsFor: 'instance creation' stamp: 'OO 10/2/2022 11:10:48'!
 crearFraccionCon: aDividend y: aDivisor
 	^aDividend negated / aDivisor negated.! !
 
-!FraccionDenominadorNegativo class methodsFor: 'as yet unclassified' stamp: 'OO 10/2/2022 11:59:31'!
+!FraccionDenominadorNegativo class methodsFor: 'instance creation' stamp: 'OO 10/2/2022 11:59:31'!
 representsTheFraccion: aDividend over: aDivisor
 	^aDivisor isNegative.! !
 
@@ -884,15 +884,7 @@ FraccionValida subclass: #FraccionNumeradorPositivoONegativo
 FraccionNumeradorPositivoONegativo class
 	instanceVariableNames: ''!
 
-!FraccionNumeradorPositivoONegativo class methodsFor: 'as yet unclassified' stamp: 'OO 10/2/2022 12:39:17'!
-crearFraccionCon: aDividend y: aDivisor
-	self subclassResponsibility.! !
-
-!FraccionNumeradorPositivoONegativo class methodsFor: 'as yet unclassified' stamp: 'OO 10/2/2022 12:39:10'!
-representsTheFraccion: aDividend over: aDivisor
-	^false.! !
-
-!FraccionNumeradorPositivoONegativo class methodsFor: 'as yet unclassified' stamp: 'OO 10/2/2022 13:01:46'!
+!FraccionNumeradorPositivoONegativo class methodsFor: 'private' stamp: 'OO 10/2/2022 13:01:46'!
 simplifiedFraccionDenominatorof: aDividend over: aDivisor
 
 	|denominator|
@@ -900,13 +892,22 @@ simplifiedFraccionDenominatorof: aDividend over: aDivisor
 	
 	^denominator! !
 
-!FraccionNumeradorPositivoONegativo class methodsFor: 'as yet unclassified' stamp: 'OO 10/2/2022 13:04:36'!
+!FraccionNumeradorPositivoONegativo class methodsFor: 'private' stamp: 'OO 10/2/2022 13:04:36'!
 simplifiedFraccionNumeratorof: aDividend over: aDivisor
 
 	| numerator |
 	numerator := aDividend // (aDividend greatestCommonDivisorWith: aDivisor).
 	
 	^numerator! !
+
+
+!FraccionNumeradorPositivoONegativo class methodsFor: 'instance creation' stamp: 'OO 10/2/2022 12:39:17'!
+crearFraccionCon: aDividend y: aDivisor
+	self subclassResponsibility.! !
+
+!FraccionNumeradorPositivoONegativo class methodsFor: 'instance creation' stamp: 'OO 10/2/2022 12:39:10'!
+representsTheFraccion: aDividend over: aDivisor
+	^false.! !
 
 
 !classDefinition: #FraccionDenominadorDiferenteDeUno category: 'Numeros-Parte2-Ejercicio'!
@@ -922,12 +923,12 @@ FraccionNumeradorPositivoONegativo subclass: #FraccionDenominadorDiferenteDeUno
 FraccionDenominadorDiferenteDeUno class
 	instanceVariableNames: ''!
 
-!FraccionDenominadorDiferenteDeUno class methodsFor: 'as yet unclassified' stamp: 'OO 10/2/2022 13:05:56'!
+!FraccionDenominadorDiferenteDeUno class methodsFor: 'instance creation' stamp: 'OO 10/2/2022 13:05:56'!
 crearFraccionCon: aDividend y: aDivisor
 	^self new initializeWith: (self simplifiedFraccionNumeratorof: aDividend over:aDivisor )
 			  over: (self simplifiedFraccionDenominatorof: aDividend over: aDivisor )! !
 
-!FraccionDenominadorDiferenteDeUno class methodsFor: 'as yet unclassified' stamp: 'OO 10/2/2022 13:03:13'!
+!FraccionDenominadorDiferenteDeUno class methodsFor: 'instance creation' stamp: 'OO 10/2/2022 13:03:13'!
 representsTheFraccion: aDividend over: aDivisor
 	^(self simplifiedFraccionDenominatorof: aDividend  over: aDivisor) isOne not.! !
 
@@ -945,10 +946,10 @@ FraccionNumeradorPositivoONegativo subclass: #FraccionDenominadorUno
 FraccionDenominadorUno class
 	instanceVariableNames: ''!
 
-!FraccionDenominadorUno class methodsFor: 'as yet unclassified' stamp: 'OO 10/2/2022 13:04:59'!
+!FraccionDenominadorUno class methodsFor: 'instance creation' stamp: 'OO 10/2/2022 13:04:59'!
 crearFraccionCon: aDividend y: aDivisor
 	^self simplifiedFraccionNumeratorof: aDividend over: aDivisor! !
 
-!FraccionDenominadorUno class methodsFor: 'as yet unclassified' stamp: 'OO 10/2/2022 13:03:37'!
+!FraccionDenominadorUno class methodsFor: 'instance creation' stamp: 'OO 10/2/2022 13:03:37'!
 representsTheFraccion: aDividend over: aDivisor
 	^(self simplifiedFraccionDenominatorof: aDividend  over: aDivisor) isOne! !
