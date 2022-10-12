@@ -45,25 +45,9 @@ Top subclass: #Element
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!Element methodsFor: 'private' stamp: 'FG 10/11/2022 21:28:04'!
-initializeWith: anElement andNextElement: nextElement
-	element := anElement.
-	self nextLink: nextElement.! !
-
-
 !Element methodsFor: 'getter' stamp: 'FG 10/11/2022 20:49:22'!
 element
 	^element.! !
-
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'Element class' category: 'Stack-Exercise'!
-Element class
-	instanceVariableNames: ''!
-
-!Element class methodsFor: 'instance creation' stamp: 'FG 10/11/2022 21:28:44'!
-newWith: element andNextElement: nextElement
-	^self new initializeWith: element andNextElement: nextElement.! !
 
 
 !classDefinition: #OOStackTest category: 'Stack-Exercise'!
@@ -227,10 +211,10 @@ top
 	^top element.! !
 
 
-!OOStack methodsFor: 'removing' stamp: 'FG 10/11/2022 21:17:11'!
+!OOStack methodsFor: 'removing' stamp: 'FG 10/12/2022 13:38:07'!
 pop
 	| poppedElement |
-	poppedElement := top element.
+	poppedElement := self top.
 	size := size - 1.
 	top := top nextLink.
 	^poppedElement.! !
