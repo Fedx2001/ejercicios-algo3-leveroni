@@ -64,22 +64,22 @@ test06AccessingTopOfStackDoesNotRemoveTheElement
 	self assert: 3 equals: stack top.
 	self assert: 3 equals: stack size.! !
 
-!StackTest methodsFor: 'tests' stamp: 'FG 10/8/2022 13:21:01'!
+!StackTest methodsFor: 'tests' stamp: 'FG 10/11/2022 20:34:11'!
 test07PoppingFromAnEmptyStackRaisesAnError
 
 	self should: [stack pop] 
 	      raise: Error 
 	      withExceptionDo: [:anError | 
-			self assert: stack canNotPopFromAnEmptyStackErrorDescription equals: anError messageText
+			self assert: Stack canNotPopFromAnEmptyStackErrorDescription equals: anError messageText
 		]. ! !
 
-!StackTest methodsFor: 'tests' stamp: 'FG 10/8/2022 13:20:50'!
+!StackTest methodsFor: 'tests' stamp: 'FG 10/11/2022 20:34:07'!
 test08AccessingTopOfAnEmptyStackRaisesAnError
 
 	self should: [stack top] 
 	      raise: Error 
 	      withExceptionDo: [ :anError | 
-			self assert: stack canNotAccessTopOfAnEmptyStackErrorDescription equals: anError messageText
+			self assert: Stack canNotAccessTopOfAnEmptyStackErrorDescription equals: anError messageText
 		]. ! !
 
 
@@ -94,15 +94,15 @@ Object subclass: #Stack
 size
 	^stackStructure size.! !
 
-!Stack methodsFor: 'accessing' stamp: 'FG 10/8/2022 13:19:40'!
+!Stack methodsFor: 'accessing' stamp: 'FG 10/11/2022 20:33:57'!
 top
-	self isEmpty ifTrue: [self error: self canNotAccessTopOfAnEmptyStackErrorDescription].
+	self isEmpty ifTrue: [self error: self class canNotAccessTopOfAnEmptyStackErrorDescription].
 	^stackStructure at: 1.! !
 
 
-!Stack methodsFor: 'removing' stamp: 'FG 10/8/2022 13:19:08'!
+!Stack methodsFor: 'removing' stamp: 'FG 10/11/2022 20:33:51'!
 pop
-	self isEmpty ifTrue: [self error: self canNotPopFromAnEmptyStackErrorDescription].
+	self isEmpty ifTrue: [self error: self class canNotPopFromAnEmptyStackErrorDescription].
 	^stackStructure removeFirst.! !
 
 
@@ -121,10 +121,16 @@ isEmpty
 	^stackStructure isEmpty.! !
 
 
-!Stack methodsFor: 'error descriptions' stamp: 'FG 10/8/2022 13:20:03'!
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Stack class' category: 'StackPrimeraParte'!
+Stack class
+	instanceVariableNames: ''!
+
+!Stack class methodsFor: 'error descriptions' stamp: 'FG 10/11/2022 20:33:37'!
 canNotAccessTopOfAnEmptyStackErrorDescription
 	^'Can not access the top of an empty stack'.! !
 
-!Stack methodsFor: 'error descriptions' stamp: 'FG 10/8/2022 13:20:06'!
+!Stack class methodsFor: 'error descriptions' stamp: 'FG 10/11/2022 20:33:44'!
 canNotPopFromAnEmptyStackErrorDescription
 	^'Cannot remove an element from an empty stack'.! !
