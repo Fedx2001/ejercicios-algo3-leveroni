@@ -189,45 +189,45 @@ test10CanNotTopWhenThereAreNoObjectsInTheStack
 
 !classDefinition: #SentenceFinderByPrefixTest category: 'Stack-Exercise'!
 TestCase subclass: #SentenceFinderByPrefixTest
-	instanceVariableNames: 'finderConStackVacio stackNoVacio finderConStackNoVacioYPrefijoWinter finderConStackNoVacioYPrefijowin finderConStackNoVacioYPrefijoBoca finderConPrefijoGamConMinuscula finderConPrefijoGamConMayuscula sentences finderConStackNoVacioYPrefijoIs'
+	instanceVariableNames: 'finderConStackVacio stackConOraciones finderConStackConOracionesYPrefijoWinter finderConStackNoVacioYPrefijowin finderConStackNoVacioYPrefijoBoca finderConPrefijoGamConMinuscula finderConPrefijoGamConMayuscula sentences finderConStackNoVacioYPrefijoIs'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'OO 10/13/2022 17:25:45'!
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'FG 10/13/2022 20:42:13'!
 test01CannotCreateSentenceFinderWithNilStackAsParameter
 
-	^ self should: [SentenceFinderByPrefix with: nil andPrefix: 'Winter']
-	         raise: Error
-	         withExceptionDo: [:anError | self assertErrorDescriptionIsStackCannotBeNil: anError]
+	self should: [SentenceFinderByPrefix withStack: nil andPrefix: 'Winter']
+	      raise: Error
+	      withExceptionDo: [:anError | self assertErrorDescriptionIsStackCannotBeNil: anError]
 	! !
 
-!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'OO 10/13/2022 17:26:28'!
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'FG 10/13/2022 20:42:29'!
 test02CannotCreateSentenceFinderWithEmptyPrefix
 	
-	^ self should: [SentenceFinderByPrefix with: stackNoVacio andPrefix: '']
-	         raise: Error
-	         withExceptionDo: [:anError | self assertErrorDescriptionIsPrefisCannotBeEmpty: anError]! !
+	self should: [SentenceFinderByPrefix withStack: stackConOraciones andPrefix: '']
+	      raise: Error
+	      withExceptionDo: [:anError | self assertErrorDescriptionIsPrefisCannotBeEmpty: anError]! !
 
-!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'OO 10/13/2022 17:27:50'!
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'FG 10/13/2022 20:37:18'!
 test03CannotCreateSenteceFinderWithAPrefixWithSpaces
 
-	self should: [SentenceFinderByPrefix with: stackNoVacio andPrefix: 'win  ter']
+	self should: [SentenceFinderByPrefix withStack: stackConOraciones andPrefix: 'win  ter']
 	      raise: Error
 	      withExceptionDo: [:anError | self assertErrorDescriptionIsPrefixCannotHaveEmptySpaces: anError].
 	
 	! !
 
-!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'OO 10/13/2022 17:29:05'!
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'FG 10/13/2022 20:37:18'!
 test04CannotCreateSentenceFinderWithNilPrefix
 
-	self should: [SentenceFinderByPrefix with: stackNoVacio andPrefix: nil]
+	self should: [SentenceFinderByPrefix withStack: stackConOraciones andPrefix: nil]
 	      raise: Error
 	      withExceptionDo: [:anError | self assertErrorDescriptionIsPrefixCannotBeNil: anError].
 	
 	! !
 
-!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'OO 10/13/2022 12:25:22'!
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'FG 10/13/2022 20:37:13'!
 test05SentenceFinderWithEmptyStackAsParameterReturnsEmptyCollection
 	
 	self assert: (finderConStackVacio find isEmpty).
@@ -236,11 +236,11 @@ test05SentenceFinderWithEmptyStackAsParameterReturnsEmptyCollection
 	
 	! !
 
-!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'OO 10/13/2022 17:32:34'!
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'FG 10/13/2022 20:37:33'!
 test06FindWithStackNotEmptyAndWinterPrefixReturnsOnlyOneMatch
 	
 	|resultsCollection|
-	resultsCollection := finderConStackNoVacioYPrefijoWinter find.
+	resultsCollection := finderConStackConOracionesYPrefijoWinter find.
 	self assertThereIsOnlyOneElementAndItsWinterIsHereForTheCollection: resultsCollection.
 	
 	
@@ -275,19 +275,19 @@ test09FindIsCaseSensitive
 	
 	! !
 
-!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'OO 10/13/2022 17:42:25'!
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'FG 10/13/2022 20:37:33'!
 test10FindDoesNotChangeTheOrderOrSizeOfTheStack
 	
-	finderConStackNoVacioYPrefijoWinter find.
+	finderConStackConOracionesYPrefijoWinter find.
 	self assertStackUsedInFinderRemainsSameSizeAndWithElementsInExpectedOrder.
 	
 	
 ! !
 
-!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'OO 10/13/2022 17:27:50'!
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'FG 10/13/2022 20:37:18'!
 test11CannotCreateSentenceFinderWithASpaceAsPrefix
 	
-	self should: [SentenceFinderByPrefix with: stackNoVacio andPrefix: ' ']
+	self should: [SentenceFinderByPrefix withStack: stackConOraciones andPrefix: ' ']
 	      raise: Error
 	      withExceptionDo: [:anError | self assertErrorDescriptionIsPrefixCannotHaveEmptySpaces: anError].
 	! !
@@ -302,20 +302,20 @@ test12FindWithMiddleOfSentenceWordReturnsEmptyCollection
 	! !
 
 
-!SentenceFinderByPrefixTest methodsFor: 'setup' stamp: 'OO 10/13/2022 17:09:53'!
+!SentenceFinderByPrefixTest methodsFor: 'setup' stamp: 'FG 10/13/2022 20:37:33'!
 setUp
 
-	finderConStackVacio := SentenceFinderByPrefix with: OOStack new andPrefix: 'Winter'. 
+	finderConStackVacio := SentenceFinderByPrefix withStack: OOStack new andPrefix: 'Winter'. 
 	
 	sentences := {'winter is coming'. 'winning is everything'. 'The winds of Winter'. 'Winter is here'. 'winter is cold'.	 'Game of Thrones'.	}.
-	stackNoVacio := self createOOstackWithSentences: sentences.
+	stackConOraciones := self createOOstackWithSentences: sentences.
 	
-	finderConStackNoVacioYPrefijoWinter := SentenceFinderByPrefix with: stackNoVacio andPrefix: 'Winter'.
-	finderConStackNoVacioYPrefijowin := SentenceFinderByPrefix with: stackNoVacio andPrefix: 'win'.
-	finderConStackNoVacioYPrefijoBoca := SentenceFinderByPrefix with: stackNoVacio andPrefix: 'Boca'.
-	finderConStackNoVacioYPrefijoIs := SentenceFinderByPrefix with: stackNoVacio andPrefix: 'is'.
-	finderConPrefijoGamConMinuscula := SentenceFinderByPrefix with: stackNoVacio andPrefix: 'gam'.
-	finderConPrefijoGamConMayuscula := SentenceFinderByPrefix with: stackNoVacio andPrefix: 'Gam'.	
+	finderConStackConOracionesYPrefijoWinter := SentenceFinderByPrefix withStack: stackConOraciones andPrefix: 'Winter'.
+	finderConStackNoVacioYPrefijowin := SentenceFinderByPrefix withStack: stackConOraciones andPrefix: 'win'.
+	finderConStackNoVacioYPrefijoBoca := SentenceFinderByPrefix withStack: stackConOraciones andPrefix: 'Boca'.
+	finderConStackNoVacioYPrefijoIs := SentenceFinderByPrefix withStack: stackConOraciones andPrefix: 'is'.
+	finderConPrefijoGamConMinuscula := SentenceFinderByPrefix withStack: stackConOraciones andPrefix: 'gam'.
+	finderConPrefijoGamConMayuscula := SentenceFinderByPrefix withStack: stackConOraciones andPrefix: 'Gam'.	
 	! !
 
 
@@ -328,29 +328,29 @@ createOOstackWithSentences: aCollectionOfSentences
 	^tempStack.! !
 
 
-!SentenceFinderByPrefixTest methodsFor: 'asserts' stamp: 'OO 10/13/2022 17:26:28'!
+!SentenceFinderByPrefixTest methodsFor: 'asserts' stamp: 'FG 10/13/2022 20:38:30'!
 assertErrorDescriptionIsPrefisCannotBeEmpty: anError
 
-	^ self assert: SentenceFinderByPrefix prefixCannotBeEmptyErrorDescription equals: anError 
-					      messageText! !
+	^ self assert: SentenceFinderByPrefix prefixCannotBeEmptyErrorDescription 
+		 equals: anError messageText! !
 
-!SentenceFinderByPrefixTest methodsFor: 'asserts' stamp: 'OO 10/13/2022 17:29:05'!
+!SentenceFinderByPrefixTest methodsFor: 'asserts' stamp: 'FG 10/13/2022 20:38:04'!
 assertErrorDescriptionIsPrefixCannotBeNil: anError
 
-	^ self assert: SentenceFinderByPrefix prefixCannotBeNilErrorDescription equals: anError 
-					  messageText! !
+	^ self assert: SentenceFinderByPrefix prefixMustBeAStringErrorDescription 
+		 equals: anError messageText! !
 
-!SentenceFinderByPrefixTest methodsFor: 'asserts' stamp: 'OO 10/13/2022 17:27:50'!
+!SentenceFinderByPrefixTest methodsFor: 'asserts' stamp: 'FG 10/13/2022 20:38:20'!
 assertErrorDescriptionIsPrefixCannotHaveEmptySpaces: anError
 
-	^ self assert: SentenceFinderByPrefix prefixCannotHaveEmptySpacesDescription equals: anError 
-					  messageText! !
+	^ self assert: SentenceFinderByPrefix prefixCannotHaveEmptySpacesDescription 
+		 equals: anError messageText! !
 
-!SentenceFinderByPrefixTest methodsFor: 'asserts' stamp: 'OO 10/13/2022 17:25:45'!
+!SentenceFinderByPrefixTest methodsFor: 'asserts' stamp: 'FG 10/13/2022 20:38:48'!
 assertErrorDescriptionIsStackCannotBeNil: anError
 
-	^ self assert: SentenceFinderByPrefix stackCannotBeNilErrorDescription equals: anError 
-					      messageText! !
+	^ self assert: SentenceFinderByPrefix stackMustBeAnOOStackErrorDescription 
+		 equals: anError messageText! !
 
 !SentenceFinderByPrefixTest methodsFor: 'asserts' stamp: 'OO 10/13/2022 17:39:17'!
 assertFinderIsCaseSensitive
@@ -363,11 +363,11 @@ assertFindingResultsWithBocaPrefixAreEmpty
 
 	^ self assert: finderConStackNoVacioYPrefijoBoca find isEmpty! !
 
-!SentenceFinderByPrefixTest methodsFor: 'asserts' stamp: 'OO 10/13/2022 17:42:25'!
+!SentenceFinderByPrefixTest methodsFor: 'asserts' stamp: 'FG 10/13/2022 20:37:18'!
 assertStackUsedInFinderRemainsSameSizeAndWithElementsInExpectedOrder
 
-	self assert: sentences size equals: stackNoVacio size.
-	sentences reversed do: [:sentence | self assert: sentence equals: stackNoVacio pop]! !
+	self assert: sentences size equals: stackConOraciones size.
+	sentences reversed do: [:sentence | self assert: sentence equals: stackConOraciones pop]! !
 
 !SentenceFinderByPrefixTest methodsFor: 'asserts' stamp: 'OO 10/13/2022 17:35:35'!
 assertThereAreThreeElementsInTheExpectedOrderForTheCollection: results
@@ -409,9 +409,9 @@ pop
 	^poppedElement.! !
 
 
-!OOStack methodsFor: 'private' stamp: 'FG 10/11/2022 21:27:32'!
+!OOStack methodsFor: 'private' stamp: 'FG 10/13/2022 20:45:07'!
 initialize
-	top := Base new.
+	top := Base newWith: nil andNextElement: nil.
 	size := 0.! !
 
 
@@ -439,7 +439,7 @@ stackEmptyErrorDescription
 
 !classDefinition: #SentenceFinderByPrefix category: 'Stack-Exercise'!
 Object subclass: #SentenceFinderByPrefix
-	instanceVariableNames: 'aStack aStrPrefix'
+	instanceVariableNames: 'stack prefix'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
@@ -450,36 +450,38 @@ find
 	^self popStackAndFindSentencesWithEstablishedPrefixThenPushStackBackToPreviousStateAndReturnMatches.! !
 
 
-!SentenceFinderByPrefix methodsFor: 'private' stamp: 'OO 10/13/2022 14:09:22'!
-initializeWithStack: aOOStack andPrefix: aStringPrefix 
-	aStack := aOOStack.
-	aStrPrefix := aStringPrefix.
+!SentenceFinderByPrefix methodsFor: 'private' stamp: 'FG 10/13/2022 20:33:14'!
+initializeWithStack: aStack andPrefix: aStringPrefix 
+	stack := aStack.
+	prefix := aStringPrefix.
 	! !
 
-!SentenceFinderByPrefix methodsFor: 'private' stamp: 'OO 10/13/2022 15:07:32'!
-popAllElementsFrom: anOOStack to: otherOOStack andForEachElementDo: aBlock
+!SentenceFinderByPrefix methodsFor: 'private' stamp: 'FG 10/13/2022 20:33:03'!
+popAllElementsFrom: aStack to: auxStack andForEachElementDo: aBlock
 
 	|poppedElement|
 	
-	[anOOStack isEmpty not] whileTrue: [
-		poppedElement := anOOStack pop.
-		aBlock value: poppedElement.
-		otherOOStack push: poppedElement.
+	[aStack isEmpty not] whileTrue: [
+			poppedElement := aStack pop.
+			aBlock value: poppedElement.
+			auxStack push: poppedElement.
 		].
 
 ! !
 
-!SentenceFinderByPrefix methodsFor: 'private' stamp: 'OO 10/13/2022 15:26:54'!
+!SentenceFinderByPrefix methodsFor: 'private' stamp: 'FG 10/13/2022 20:32:44'!
 popStackAndFindSentencesWithEstablishedPrefixThenPushStackBackToPreviousStateAndReturnMatches
 	
-	|sacados matches|
-	sacados := OOStack new.
+	|popped matches|
+	popped := OOStack new.
 	matches := OrderedCollection new.
-
 	
-	self popAllElementsFrom: aStack to: sacados 
-	      andForEachElementDo: [:poppedElement | (poppedElement  beginsWith: aStrPrefix) ifTrue: [matches addLast: poppedElement].].
-	self popAllElementsFrom: sacados to:  aStack
+	self popAllElementsFrom: stack to: popped 
+	      andForEachElementDo: [:poppedElement | 
+							(poppedElement beginsWith: prefix) ifTrue: [matches addLast: poppedElement].
+						].
+
+	self popAllElementsFrom: popped to:  stack
 	      andForEachElementDo: [:poppedElement | ].	
 	
 	^matches.
@@ -496,34 +498,35 @@ SentenceFinderByPrefix class
 prefixCannotBeEmptyErrorDescription
 	^'Prefix cannot be empty'! !
 
-!SentenceFinderByPrefix class methodsFor: 'error descriptions' stamp: 'OO 10/12/2022 21:29:29'!
-prefixCannotBeNilErrorDescription
-	^'Prefix cannot be nil.'! !
-
 !SentenceFinderByPrefix class methodsFor: 'error descriptions' stamp: 'OO 10/12/2022 20:54:30'!
 prefixCannotHaveEmptySpacesDescription
 	^'Prefix cannot have empty spaces'! !
 
-!SentenceFinderByPrefix class methodsFor: 'error descriptions' stamp: 'OO 10/12/2022 21:33:08'!
-stackCannotBeNilErrorDescription
-	^'Stack cannot be nil.'! !
+!SentenceFinderByPrefix class methodsFor: 'error descriptions' stamp: 'FG 10/13/2022 20:34:00'!
+prefixMustBeAStringErrorDescription
+	^'The prefix must be a String.'! !
+
+!SentenceFinderByPrefix class methodsFor: 'error descriptions' stamp: 'FG 10/13/2022 20:34:13'!
+stackMustBeAnOOStackErrorDescription
+	^'Stack must be an OOStack'! !
 
 
-!SentenceFinderByPrefix class methodsFor: 'Instance Creation' stamp: 'OO 10/13/2022 16:39:47'!
+!SentenceFinderByPrefix class methodsFor: 'private' stamp: 'OO 10/13/2022 16:39:47'!
 thisStringHasSpaces: aStringPrefix
 	"Devuelve true si la string tiene al menos un espacio o está compuesta solamente por una."
 	^ (aStringPrefix findBetweenSubStrs: {' '. '	'.}) size ~= 1! !
 
-!SentenceFinderByPrefix class methodsFor: 'Instance Creation' stamp: 'OO 10/13/2022 16:40:45'!
-with: aOOStack andPrefix: aStringPrefix
 
-	aOOStack ifNil: [self error: self stackCannotBeNilErrorDescription].
+!SentenceFinderByPrefix class methodsFor: 'instance Creation' stamp: 'FG 10/13/2022 20:24:51'!
+withStack: anOOStack andPrefix: aStringPrefix
+
+	(anOOStack isKindOf: OOStack) ifFalse: [self error: self stackMustBeAnOOStackErrorDescription].
 	
-	aStringPrefix ifNil: [self error: self prefixCannotBeNilErrorDescription ].
+	aStringPrefix isString ifFalse: [self error: self prefixMustBeAStringErrorDescription ].
 	
 	aStringPrefix isEmpty ifTrue: [self error: self prefixCannotBeEmptyErrorDescription].
 	
 	(self thisStringHasSpaces: aStringPrefix)
 			ifTrue: [self error: self prefixCannotHaveEmptySpacesDescription].
 			
-	^self new initializeWithStack: aOOStack andPrefix: aStringPrefix! !
+	^self new initializeWithStack: anOOStack andPrefix: aStringPrefix! !
