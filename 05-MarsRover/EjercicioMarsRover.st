@@ -120,101 +120,144 @@ nextStepForwardInThisDirection
 
 !classDefinition: #TestsMarsRover category: 'EjercicioMarsRover'!
 TestCase subclass: #TestsMarsRover
-	instanceVariableNames: 'aMarsRover'
+	instanceVariableNames: 'aMarsRoverInitiallyFacingNorth aMarsRoverInitiallyFacingNorthEast aMarsRoverInitiallyFacingSouth aMarsRoverInitiallyFacingWest'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'EjercicioMarsRover'!
 
-!TestsMarsRover methodsFor: 'tests' stamp: 'OO 10/30/2022 16:15:03'!
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/1/2022 16:51:07'!
 test01EmptyCommandDoesNothing
 	
 	
-	aMarsRover executeComand: ''.
+	aMarsRoverInitiallyFacingNorth executeComands: ''.
 	
-	self assert: (aMarsRover isInPosition: 0@0).
-	self assert: (aMarsRover isFacing: MovementRuleNorth).! !
+	self assert: (aMarsRoverInitiallyFacingNorth isInPosition: 0@0).
+	self assert: (aMarsRoverInitiallyFacingNorth isFacing: MovementRuleNorth).! !
 
-!TestsMarsRover methodsFor: 'tests' stamp: 'OO 10/30/2022 17:36:09'!
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/1/2022 16:51:07'!
 test02CommandRRotatesRover
 	
 
 	
-	aMarsRover executeComand: 'r'.
+	aMarsRoverInitiallyFacingNorth executeComands: 'r'.
 	
-	self deny: (aMarsRover isFacing: MovementRuleNorth).! !
+	self deny: (aMarsRoverInitiallyFacingNorth isFacing: MovementRuleNorth).! !
 
-!TestsMarsRover methodsFor: 'tests' stamp: 'OO 10/30/2022 17:36:19'!
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/1/2022 16:51:07'!
 test03CommandLRotatesRover
 	
 
 	
-	aMarsRover executeComand: 'l'.
+	aMarsRoverInitiallyFacingNorth executeComands: 'l'.
 	
-	self deny: (aMarsRover isFacing: MovementRuleNorth).! !
+	self deny: (aMarsRoverInitiallyFacingNorth isFacing: MovementRuleNorth).! !
 
-!TestsMarsRover methodsFor: 'tests' stamp: 'OO 10/30/2022 17:09:01'!
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/1/2022 16:51:07'!
 test04CommandFMovesMarsRoverForward
 	
-	aMarsRover executeComand: 'f'.
+	aMarsRoverInitiallyFacingNorth executeComands: 'f'.
 	
-	self deny: (aMarsRover isInPosition: 0@0).! !
+	self deny: (aMarsRoverInitiallyFacingNorth isInPosition: 0@0).! !
 
-!TestsMarsRover methodsFor: 'tests' stamp: 'OO 10/30/2022 13:11:48'!
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/1/2022 16:51:07'!
 test05CommandBMovesMarsRoverBackwards
 	
 
-	aMarsRover executeComand: 'b'.
+	aMarsRoverInitiallyFacingNorth executeComands: 'b'.
 	
-	self deny: (aMarsRover isInPosition: 0@0).! !
+	self deny: (aMarsRoverInitiallyFacingNorth isInPosition: 0@0).! !
 
-!TestsMarsRover methodsFor: 'tests' stamp: 'OO 10/30/2022 17:27:49'!
-test06ExecutingCommandRTwoTimesRotates180DegreesToTheRight
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/1/2022 16:59:23'!
+test0605ExecutingCommandRTwoTimesRotates180DegreesToTheRight
 	
 
-	aMarsRover executeComand: 'rr'.
+	aMarsRoverInitiallyFacingNorth executeComands: 'rr'.
 	
-	self assert: (aMarsRover isFacing: MovementRuleSouth).! !
+	self assert: (aMarsRoverInitiallyFacingNorth isFacing: MovementRuleSouth).! !
 
-!TestsMarsRover methodsFor: 'tests' stamp: 'OO 10/30/2022 17:30:06'!
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/1/2022 16:58:03'!
+test061ExecutingCommandRTwoTimesRotates270DegreesToTheRight
+	
+
+	aMarsRoverInitiallyFacingNorth executeComands: 'rrr'.
+	
+	self assert: (aMarsRoverInitiallyFacingNorth isFacing: MovementRuleWest ).! !
+
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/1/2022 16:58:42'!
+test062ExecutingCommandRTwoTimesRotates360DegreesToTheRight
+	
+
+	aMarsRoverInitiallyFacingNorth executeComands: 'rrrr'.
+	
+	self assert: (aMarsRoverInitiallyFacingNorth isFacing: MovementRuleNorth).! !
+
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/1/2022 17:00:35'!
+test063ExecutingCommandRTwoTimesRotates180DegreesToTheLeft
+	
+
+	aMarsRoverInitiallyFacingNorth executeComands: 'll'.
+	
+	self assert: (aMarsRoverInitiallyFacingNorth isFacing: MovementRuleSouth).! !
+
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/1/2022 17:01:00'!
+test064ExecutingCommandRTwoTimesRotates270DegreesToTheLeft
+	
+
+	aMarsRoverInitiallyFacingNorth executeComands: 'lll'.
+	
+	self assert: (aMarsRoverInitiallyFacingNorth isFacing: MovementRuleEast).! !
+
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/1/2022 17:01:21'!
+test064ExecutingCommandRTwoTimesRotates360DegreesToTheLeft
+	
+
+	aMarsRoverInitiallyFacingNorth executeComands: 'llll'.
+	
+	self assert: (aMarsRoverInitiallyFacingNorth isFacing: MovementRuleNorth).! !
+
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/1/2022 16:51:07'!
 test07CommandRFMovesRoverOnePointToTheEast
 	
 
-	aMarsRover executeComand: 'rf'.
+	aMarsRoverInitiallyFacingNorth executeComands: 'rf'.
 	
-	self assert: (aMarsRover isFacing: MovementRuleEast).
-	self assert: (aMarsRover isInPosition: 1@0).! !
+	self assert: (aMarsRoverInitiallyFacingNorth isFacing: MovementRuleEast).
+	self assert: (aMarsRoverInitiallyFacingNorth isInPosition: 1@0).! !
 
-!TestsMarsRover methodsFor: 'tests' stamp: 'OO 10/30/2022 17:31:19'!
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/1/2022 16:51:07'!
 test08CommandRBMovesRoverOnePointToTheWestWhileFacingEast
 	
 
-	aMarsRover executeComand: 'rb'.
+	aMarsRoverInitiallyFacingNorth executeComands: 'rb'.
 	
-	self assert: (aMarsRover isFacing: MovementRuleEast).
-	self assert: (aMarsRover isInPosition: -1@0).! !
+	self assert: (aMarsRoverInitiallyFacingNorth isFacing: MovementRuleEast).
+	self assert: (aMarsRoverInitiallyFacingNorth isInPosition: -1@0).! !
 
-!TestsMarsRover methodsFor: 'tests' stamp: 'OO 10/30/2022 17:32:03'!
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/1/2022 16:51:07'!
 test09InvalidCommandRaisesExpectedErrorDescription
 	
-	  self should: [aMarsRover executeComand: 'ñ'.]  
+	  self should: [aMarsRoverInitiallyFacingNorth executeComands: 'ñ'.]  
 	 	 raise:  Error
 	        withExceptionDo: [:anError |self assert: 'Invalid Instruction!!' equals: anError messageText].! !
 
-!TestsMarsRover methodsFor: 'tests' stamp: 'OO 10/30/2022 17:33:03'!
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/1/2022 16:51:07'!
 test10CommandFFMovesRoverTwoPointsToTheNorthWhileFacingNorth
-		aMarsRover executeComand: 'ff'.
-		self assert: (aMarsRover isInPosition: 0@2).! !
+		aMarsRoverInitiallyFacingNorth executeComands: 'ff'.
+		self assert: (aMarsRoverInitiallyFacingNorth isInPosition: 0@2).! !
 
-!TestsMarsRover methodsFor: 'tests' stamp: 'OO 10/30/2022 17:34:12'!
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/1/2022 16:51:07'!
 test11CommandBBMovesRoverTwoPointsToTheSouthWhileFacingNorth
-		aMarsRover executeComand: 'bb'.
-		self assert: (aMarsRover isInPosition: 0@-2).! !
+		aMarsRoverInitiallyFacingNorth executeComands: 'bb'.
+		self assert: (aMarsRoverInitiallyFacingNorth isInPosition: 0@-2).! !
 
 
-!TestsMarsRover methodsFor: 'setUp' stamp: 'OO 10/30/2022 16:15:03'!
+!TestsMarsRover methodsFor: 'setUp' stamp: 'OO 11/1/2022 16:52:37'!
 setUp
 
-	aMarsRover := MarsRover inPoint: 0@0 facing: MovementRuleNorth new.! !
+	aMarsRoverInitiallyFacingNorth := MarsRover inPoint: 0@0 facing: MovementRuleNorth new.
+	aMarsRoverInitiallyFacingNorthEast := MarsRover inPoint: 0@0 facing: MovementRuleEast new.
+	aMarsRoverInitiallyFacingSouth := MarsRover inPoint: 0@0 facing: MovementRuleSouth new.
+	aMarsRoverInitiallyFacingWest := MarsRover inPoint: 0@0 facing: MovementRuleWest new.! !
 
 
 !classDefinition: #MarsRover category: 'EjercicioMarsRover'!
@@ -234,17 +277,17 @@ initializeInPoint: aPoint facing: aCardinalDirection
 	validCommands := {'f'. 'b'. 'r'. 'l'}.! !
 
 
-!MarsRover methodsFor: 'commands' stamp: 'OO 10/30/2022 17:04:11'!
-executeComand: aStringOfCommandsIdentifiers 
+!MarsRover methodsFor: 'commands' stamp: 'OO 11/1/2022 16:49:47'!
+executeComands: aStringOfCommandsIdentifiers 
 	
 	|CommandIdentifier|
 	aStringOfCommandsIdentifiers do: [:aCharacter |
-	CommandIdentifier := String with: aCharacter.
-	(self isValidCommand: CommandIdentifier) ifFalse: [self error: 'Invalid Instruction!!'].
-	CommandIdentifier = 'r' ifTrue: [self rotateRight.].
-	CommandIdentifier = 'l' ifTrue: [self rotateLeft.].
-	CommandIdentifier = 'f' ifTrue: [self moveForward].
-	CommandIdentifier = 'b' ifTrue: [self moveBackwards].
+		CommandIdentifier := String with: aCharacter.
+		(self isValidCommand: CommandIdentifier) ifFalse: [self error: 'Invalid Instruction!!'].
+		CommandIdentifier = 'r' ifTrue: [self rotateRight.].
+		CommandIdentifier = 'l' ifTrue: [self rotateLeft.].
+		CommandIdentifier = 'f' ifTrue: [self moveForward].
+		CommandIdentifier = 'b' ifTrue: [self moveBackwards].
 	].! !
 
 !MarsRover methodsFor: 'commands' stamp: 'OO 10/30/2022 17:16:12'!
