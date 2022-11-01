@@ -109,18 +109,18 @@ nextMovementRuleAntiClockwise
 nextMovementRuleClockwise
 	^MovementRuleNorth new.! !
 
-!MovementRuleWest methodsFor: 'accessing' stamp: 'OO 10/30/2022 16:27:33'!
+!MovementRuleWest methodsFor: 'accessing' stamp: 'OO 11/1/2022 17:25:20'!
 nextStepBackwardsInThisDirection
 	^(1@0).! !
 
-!MovementRuleWest methodsFor: 'accessing' stamp: 'OO 10/30/2022 16:22:20'!
+!MovementRuleWest methodsFor: 'accessing' stamp: 'OO 11/1/2022 17:25:16'!
 nextStepForwardInThisDirection
-	^(0@-1).! !
+	^(-1@0).! !
 
 
 !classDefinition: #TestsMarsRover category: 'EjercicioMarsRover'!
 TestCase subclass: #TestsMarsRover
-	instanceVariableNames: 'aMarsRoverInitiallyFacingNorth aMarsRoverInitiallyFacingNorthEast aMarsRoverInitiallyFacingSouth aMarsRoverInitiallyFacingWest'
+	instanceVariableNames: 'aMarsRoverInitiallyFacingNorth aMarsRoverInitiallyFacingSouth aMarsRoverInitiallyFacingWest aMarsRoverInitiallyFacingEast'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'EjercicioMarsRover'!
@@ -215,6 +215,33 @@ test064ExecutingCommandRTwoTimesRotates360DegreesToTheLeft
 	
 	self assert: (aMarsRoverInitiallyFacingNorth isFacing: MovementRuleNorth).! !
 
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/1/2022 17:18:38'!
+test071CommandRFMovesRoverOnePointToTheSouth
+	
+
+	aMarsRoverInitiallyFacingEast executeComands: 'rf'.
+	
+	self assert: (aMarsRoverInitiallyFacingEast isFacing: MovementRuleSouth).
+	self assert: (aMarsRoverInitiallyFacingEast isInPosition: 0@-1).! !
+
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/1/2022 17:18:55'!
+test072CommandRFMovesRoverOnePointToTheWest
+	
+
+	aMarsRoverInitiallyFacingSouth executeComands: 'rf'.
+	
+	self assert: (aMarsRoverInitiallyFacingSouth isFacing: MovementRuleWest).
+	self assert: (aMarsRoverInitiallyFacingSouth isInPosition: -1@0).! !
+
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/1/2022 17:29:50'!
+test073CommandRFMovesRoverOnePointToTheNorth
+	
+
+	aMarsRoverInitiallyFacingWest executeComands: 'rf'.
+	
+	self assert: (aMarsRoverInitiallyFacingWest isFacing: MovementRuleNorth ).
+	self assert: (aMarsRoverInitiallyFacingWest isInPosition: 0@1).! !
+
 !TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/1/2022 16:51:07'!
 test07CommandRFMovesRoverOnePointToTheEast
 	
@@ -251,11 +278,11 @@ test11CommandBBMovesRoverTwoPointsToTheSouthWhileFacingNorth
 		self assert: (aMarsRoverInitiallyFacingNorth isInPosition: 0@-2).! !
 
 
-!TestsMarsRover methodsFor: 'setUp' stamp: 'OO 11/1/2022 16:52:37'!
+!TestsMarsRover methodsFor: 'setUp' stamp: 'OO 11/1/2022 17:11:45'!
 setUp
 
 	aMarsRoverInitiallyFacingNorth := MarsRover inPoint: 0@0 facing: MovementRuleNorth new.
-	aMarsRoverInitiallyFacingNorthEast := MarsRover inPoint: 0@0 facing: MovementRuleEast new.
+	aMarsRoverInitiallyFacingEast := MarsRover inPoint: 0@0 facing: MovementRuleEast new.
 	aMarsRoverInitiallyFacingSouth := MarsRover inPoint: 0@0 facing: MovementRuleSouth new.
 	aMarsRoverInitiallyFacingWest := MarsRover inPoint: 0@0 facing: MovementRuleWest new.! !
 
