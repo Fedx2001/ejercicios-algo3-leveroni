@@ -5,154 +5,256 @@ TestCase subclass: #TestsMarsRover
 	poolDictionaries: ''
 	category: 'EjercicioMarsRoverTDD'!
 
-!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/2/2022 20:43:07'!
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:42:01'!
 test01EmptyCommandDoesNothing
 	
 	
-	aMarsRoverInitiallyFacingNorth executeComands: ''.
+	aMarsRoverInitiallyFacingNorth executeCommands: ''.
 	
 	self assert: (aMarsRoverInitiallyFacingNorth isInPosition: 0@0).
 	self assert: (aMarsRoverInitiallyFacingNorth isFacing: #North).! !
 
-!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/2/2022 20:51:36'!
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:42:01'!
 test02CommandRRotatesRover
 	
-	aMarsRoverInitiallyFacingNorth executeComands: 'r'.
+	aMarsRoverInitiallyFacingNorth executeCommands: 'r'.
 	
 	self deny: (aMarsRoverInitiallyFacingNorth isFacing: #North).! !
 
-!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/2/2022 21:03:11'!
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:42:01'!
 test03CommandLRotatesRoverLeft90Degrees
 	
-	aMarsRoverInitiallyFacingNorth executeComands: 'l'.
+	aMarsRoverInitiallyFacingNorth executeCommands: 'l'.
 	
 	self assert: (aMarsRoverInitiallyFacingNorth isFacing: #West).! !
 
-!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/2/2022 21:04:05'!
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:42:01'!
 test04CommandFMovesMarsRoverForward
 	
-	aMarsRoverInitiallyFacingNorth executeComands: 'f'.
+	aMarsRoverInitiallyFacingNorth executeCommands: 'f'.
 	
 	self deny: (aMarsRoverInitiallyFacingNorth isInPosition: 0@0).! !
 
-!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/2/2022 21:06:06'!
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:42:01'!
 test05CommandBMovesMarsRoverBackwards
 	
 
-	aMarsRoverInitiallyFacingNorth executeComands: 'b'.
+	aMarsRoverInitiallyFacingNorth executeCommands: 'b'.
 	
 	self assert: (aMarsRoverInitiallyFacingNorth isInPosition: 0@-1).! !
 
-!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/2/2022 21:12:44'!
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:42:01'!
 test06CommandRRotatesRover90DegreesToTheRightWithRoverInitiallyFacingEast
 	
-	aMarsRoverInitiallyFacingEast executeComands: 'r'.
+	aMarsRoverInitiallyFacingEast executeCommands: 'r'.
 	
 	self assert: (aMarsRoverInitiallyFacingEast isFacing: #South).! !
 
-!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/2/2022 21:14:41'!
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:42:01'!
 test07CommandLRotatesRoverLeft90DegreesWithRoverInitiallyFacingEast
 	
-	aMarsRoverInitiallyFacingEast executeComands: 'l'.
+	aMarsRoverInitiallyFacingEast executeCommands: 'l'.
 	
 	self assert: (aMarsRoverInitiallyFacingEast isFacing: #North).! !
 
-!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/2/2022 21:16:15'!
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:42:01'!
 test08CommandFMovesMarsRoverForwardToTheEastWithRoverInitiallyFacingEast
 	
-	aMarsRoverInitiallyFacingEast executeComands: 'f'.
+	aMarsRoverInitiallyFacingEast executeCommands: 'f'.
 	
 	self assert: (aMarsRoverInitiallyFacingEast isInPosition: 1@0).! !
 
-!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/2/2022 21:17:39'!
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:42:01'!
 test09CommandBMovesMarsRoverBackwardsWithRoverInitiallyFacingEast
 	
 
-	aMarsRoverInitiallyFacingEast executeComands: 'b'.
+	aMarsRoverInitiallyFacingEast executeCommands: 'b'.
 	
 	self assert: (aMarsRoverInitiallyFacingEast isInPosition: -1@0).! !
 
-!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/2/2022 21:19:15'!
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:42:01'!
 test10CommandRRotatesRover90DegreesToTheRightWithRoverInitiallyFacingSouth
 	
-	aMarsRoverInitiallyFacingSouth executeComands: 'r'.
+	aMarsRoverInitiallyFacingSouth executeCommands: 'r'.
 	
 	self assert: (aMarsRoverInitiallyFacingSouth isFacing: #West).! !
 
-!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/2/2022 21:22:39'!
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:42:01'!
 test11CommandLRotatesRoverLeft90DegreesWithRoverInitiallyFacingSouth
 	
-	aMarsRoverInitiallyFacingSouth executeComands: 'l'.
+	aMarsRoverInitiallyFacingSouth executeCommands: 'l'.
 	
 	self assert: (aMarsRoverInitiallyFacingSouth isFacing: #East).! !
 
-!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/2/2022 21:23:28'!
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:42:01'!
 test12CommandFMovesMarsRoverForwardToTheSouthWithRoverInitiallyFacingSouth
 	
-	aMarsRoverInitiallyFacingSouth executeComands: 'f'.
+	aMarsRoverInitiallyFacingSouth executeCommands: 'f'.
 	
 	self assert: (aMarsRoverInitiallyFacingSouth isInPosition: 0@-1).! !
 
-!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/2/2022 21:24:34'!
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:42:01'!
 test13CommandBMovesMarsRoverBackwardsWithRoverInitiallyFacingSouth
 	
 
-	aMarsRoverInitiallyFacingSouth executeComands: 'b'.
+	aMarsRoverInitiallyFacingSouth executeCommands: 'b'.
 	
 	self assert: (aMarsRoverInitiallyFacingSouth isInPosition: 0@1).! !
 
-!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/2/2022 21:27:50'!
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:42:01'!
 test14CommandRRotatesRover90DegreesToTheRightWithRoverInitiallyFacingWest
 	
-	aMarsRoverInitiallyFacingWest executeComands: 'r'.
+	aMarsRoverInitiallyFacingWest executeCommands: 'r'.
 	
 	self assert: (aMarsRoverInitiallyFacingWest isFacing: #North).! !
 
-!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/2/2022 21:29:24'!
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:42:01'!
 test15CommandLRotatesRoverLeft90DegreesWithRoverInitiallyFacingWest
 	
-	aMarsRoverInitiallyFacingWest executeComands: 'l'.
+	aMarsRoverInitiallyFacingWest executeCommands: 'l'.
 	
 	self assert: (aMarsRoverInitiallyFacingWest isFacing: #South).! !
 
-!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/2/2022 21:30:23'!
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:42:01'!
 test16CommandFMovesMarsRoverForwardToTheSouthWithRoverInitiallyFacingWest
 	
-	aMarsRoverInitiallyFacingWest executeComands: 'f'.
+	aMarsRoverInitiallyFacingWest executeCommands: 'f'.
 	
 	self assert: (aMarsRoverInitiallyFacingWest isInPosition: -1@0).! !
 
-!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/2/2022 21:31:34'!
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:42:01'!
 test17CommandBMovesMarsRoverBackwardsWithRoverInitiallyFacingWest
 	
 
-	aMarsRoverInitiallyFacingWest executeComands: 'b'.
+	aMarsRoverInitiallyFacingWest executeCommands: 'b'.
 	
 	self assert: (aMarsRoverInitiallyFacingWest isInPosition: 1@0).! !
 
-!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/2/2022 22:33:58'!
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:42:01'!
 test18ExecutingCommandRTwoTimesRotates180DegreesToTheRight
 	
 
-	aMarsRoverInitiallyFacingNorth executeComands: 'rr'.
+	aMarsRoverInitiallyFacingNorth executeCommands: 'rr'.
 	
 	self assert: (aMarsRoverInitiallyFacingNorth isFacing: #South).! !
 
-!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/2/2022 22:34:47'!
-test19ExecutingCommandRTwoTimesRotates270DegreesToTheRight
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:42:01'!
+test19ExecutingCommandRThreeTimesRotates270DegreesToTheRight
 	
 
-	aMarsRoverInitiallyFacingNorth executeComands: 'rrr'.
+	aMarsRoverInitiallyFacingNorth executeCommands: 'rrr'.
 	
 	self assert: (aMarsRoverInitiallyFacingNorth isFacing: #West).! !
 
-!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/2/2022 22:42:48'!
-test20ExecutingCommandRTwoTimesRotates450DegreesToTheRight
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:42:01'!
+test20ExecutingCommandRFiveTimesRotates450DegreesToTheRight
 	
 
-	aMarsRoverInitiallyFacingNorth executeComands: 'rrrrr'.
+	aMarsRoverInitiallyFacingNorth executeCommands: 'rrrrr'.
 	
 	self assert: (aMarsRoverInitiallyFacingNorth isFacing: #East).! !
+
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:42:01'!
+test21ExecutingCommandLTwoTimesRotates180DegreesToTheLeft
+	
+
+	aMarsRoverInitiallyFacingNorth executeCommands: 'll'.
+	
+	self assert: (aMarsRoverInitiallyFacingNorth isFacing: #South).! !
+
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:42:01'!
+test22ExecutingCommandLThreeTimesRotates270DegreesToTheLeft
+	
+
+	aMarsRoverInitiallyFacingNorth executeCommands: 'lll'.
+	
+	self assert: (aMarsRoverInitiallyFacingNorth isFacing: #East).! !
+
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:42:01'!
+test23ExecutingCommandLFiveTimesRotates450DegreesToTheLeft
+	
+
+	aMarsRoverInitiallyFacingNorth executeCommands: 'lllll'.
+	
+	self assert: (aMarsRoverInitiallyFacingNorth isFacing: #West).! !
+
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:42:01'!
+test24CommandFFMovesRoverTwoPointsToTheNorthWhileFacingNorth
+	
+
+	aMarsRoverInitiallyFacingNorth executeCommands: 'ff'.
+	
+	self assert: (aMarsRoverInitiallyFacingNorth isInPosition: 0@2).! !
+
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:42:01'!
+test25CommandFFFMovesRoverThreePointsToTheNorthWhileFacingNorth
+	
+
+	aMarsRoverInitiallyFacingNorth executeCommands: 'fff'.
+	
+	self assert: (aMarsRoverInitiallyFacingNorth isInPosition: 0@3).! !
+
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:42:01'!
+test26CommandBBMovesRoverTwoPointsToTheSouthWhileFacingNorth
+	
+
+	aMarsRoverInitiallyFacingNorth executeCommands: 'bb'.
+	
+	self assert: (aMarsRoverInitiallyFacingNorth isInPosition: 0@-2).! !
+
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:42:01'!
+test27CommandBBBMovesRoverThreePointsToTheSouthWhileFacingNorth
+	
+
+	aMarsRoverInitiallyFacingNorth executeCommands: 'bbb'.
+	
+	self assert: (aMarsRoverInitiallyFacingNorth isInPosition: 0@-3).! !
+
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:42:01'!
+test28Invalid—CommandRaisesExpectedErrorDescription
+	
+	  self should: [aMarsRoverInitiallyFacingNorth executeCommands: 'Ò'.]  
+	 	 raise:  Error
+	        withExceptionDo: [:anError |self assert: 'Invalid Instruction!!' equals: anError messageText].! !
+
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:42:01'!
+test29InvalidCommand—RaisesExpectedErrorDescriptionAndStopsFurtherExecutionOfCommands
+	
+	  self should: [aMarsRoverInitiallyFacingNorth executeCommands: 'Òr'.]  
+	 	 raise:  Error
+	        withExceptionDo: [:anError |self assert: 'Invalid Instruction!!' equals: anError messageText.
+							   self assert: (aMarsRoverInitiallyFacingNorth isFacing: #North)].! !
+
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:42:01'!
+test30InvalidCommand—RaisesExpectedErrorDescriptionAndStopsFurtherExecutionOfCommands
+	
+	  self should: [aMarsRoverInitiallyFacingNorth executeCommands: 'Òl'.]  
+	 	 raise:  Error
+	        withExceptionDo: [:anError |self assert: 'Invalid Instruction!!' equals: anError messageText.
+							   self assert: (aMarsRoverInitiallyFacingNorth isFacing: #North)].! !
+
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:43:05'!
+test31ExecuteValidCommandThenInvalid—CommandRaisesExpectedErrorDescriptionAndStopsFurtherExecutionOfCommands
+	
+	  self should: [aMarsRoverInitiallyFacingNorth executeCommands: 'rÒl'.]  
+	 	 raise:  Error
+	        withExceptionDo: [:anError |self assert: 'Invalid Instruction!!' equals: anError messageText.
+							   self assert: (aMarsRoverInitiallyFacingNorth isFacing: #East)].! !
+
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:42:01'!
+test32InvalidCommandNot—RaisesExpectedErrorDescription
+	
+	  self should: [aMarsRoverInitiallyFacingNorth executeCommands: 'k'.]  
+	 	 raise:  Error
+	        withExceptionDo: [:anError |self assert: 'Invalid Instruction!!' equals: anError messageText].! !
+
+!TestsMarsRover methodsFor: 'tests' stamp: 'OO 11/3/2022 12:42:01'!
+test33InvalidCommandNot—RaisesExpectedErrorDescriptionAndStopsFurtherExecutionOfCommands
+	
+	  self should: [aMarsRoverInitiallyFacingNorth executeCommands: 'kr'.]  
+	 	 raise:  Error
+	        withExceptionDo: [:anError |self assert: 'Invalid Instruction!!' equals: anError messageText.
+							   self assert: (aMarsRoverInitiallyFacingNorth isFacing: #North)].! !
 
 
 !TestsMarsRover methodsFor: 'setUp' stamp: 'OO 11/2/2022 20:43:58'!
@@ -178,26 +280,26 @@ initializeInPoint: aPosition withTheMovementRule: aMovementRule
 	movementRule := aMovementRule.! !
 
 
-!MarsRover methodsFor: 'operations' stamp: 'OO 11/2/2022 22:40:12'!
-executeComands: aStringOfCommands 
+!MarsRover methodsFor: 'operations' stamp: 'OO 11/3/2022 12:42:01'!
+executeCommands: aStringOfCommands 
 	
 	aStringOfCommands do:[ :aCommand |
+	(self isValidCommand: aCommand) ifFalse: [self error: 'Invalid Instruction!!'].
 	aCommand = $r ifTrue: [self rotateRight].
 	aCommand = $l ifTrue: [self rotateLeft].
 	aCommand = $f ifTrue: [self moveForward].
 	aCommand = $b ifTrue: [self moveBackwards].
-	]
-	! !
+	].! !
 
-!MarsRover methodsFor: 'operations' stamp: 'OO 11/2/2022 22:17:07'!
+!MarsRover methodsFor: 'operations' stamp: 'OO 11/3/2022 11:06:37'!
 moveBackwards
 
-	^ currentPosition :=  movementRule nextStepBackwardsInThisDirection! !
+	^ currentPosition :=  currentPosition + movementRule nextStepBackwardsInThisDirection! !
 
-!MarsRover methodsFor: 'operations' stamp: 'OO 11/2/2022 22:16:46'!
+!MarsRover methodsFor: 'operations' stamp: 'OO 11/3/2022 11:00:47'!
 moveForward
 
-	^ currentPosition := movementRule nextStepForwardInThisDirection! !
+	^ currentPosition := currentPosition + movementRule nextStepForwardInThisDirection! !
 
 !MarsRover methodsFor: 'operations' stamp: 'OO 11/2/2022 22:16:28'!
 rotateLeft
@@ -218,25 +320,23 @@ isFacing: aCardinalDirection
 isInPosition: aPosition 
 	^currentPosition  = aPosition.! !
 
+!MarsRover methodsFor: 'testing' stamp: 'OO 11/3/2022 11:32:42'!
+isValidCommand: aCommand
+
+	^ {$r. $l. $f. $b} includes: aCommand! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'MarsRover class' category: 'EjercicioMarsRoverTDD'!
 MarsRover class
 	instanceVariableNames: ''!
 
-!MarsRover class methodsFor: 'instance creation' stamp: 'OO 11/2/2022 22:12:11'!
+!MarsRover class methodsFor: 'instance creation' stamp: 'OO 11/3/2022 12:40:52'!
 inPoint: aPosition facing: aCardinalDirection 
 
-	aCardinalDirection = #North ifTrue:[
-	^self new initializeInPoint: aPosition withTheMovementRule:  MarsRoverMovementRuleNorth new.].
-	aCardinalDirection = #South ifTrue:[
-	^self new initializeInPoint: aPosition withTheMovementRule:  MarsRoverMovementRuleSouth new.].
-	aCardinalDirection = #East ifTrue:[
-	^self new initializeInPoint: aPosition withTheMovementRule:  MarsRoverMovementRuleEast new.].
-	aCardinalDirection = #West ifTrue:[
-	^self new initializeInPoint: aPosition withTheMovementRule:  MarsRoverMovementRuleWest new.].
-
-	"alias switch din·mico"! !
+	^self new initializeInPoint: aPosition withTheMovementRule:  (MarsRoverMovementRule newForDirection: aCardinalDirection).
+	
+! !
 
 
 !classDefinition: #MarsRoverMovementRule category: 'EjercicioMarsRoverTDD'!
@@ -265,6 +365,23 @@ nextStepForwardInThisDirection
 
 !MarsRoverMovementRule methodsFor: 'testing' stamp: 'OO 11/2/2022 22:23:27'!
 isMarsRoverFacing: aCardinalDirection
+	self subclassResponsibility.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'MarsRoverMovementRule class' category: 'EjercicioMarsRoverTDD'!
+MarsRoverMovementRule class
+	instanceVariableNames: ''!
+
+!MarsRoverMovementRule class methodsFor: 'instance creation' stamp: 'OO 11/3/2022 12:38:13'!
+newForDirection: aCardinalDirection
+
+	^(MarsRoverMovementRule subclasses detect:[:aMovementRuleSubclass | 
+							aMovementRuleSubclass isCompatibleWithDirection: aCardinalDirection ]) new.! !
+
+
+!MarsRoverMovementRule class methodsFor: 'private' stamp: 'OO 11/3/2022 12:36:52'!
+isCompatibleWithDirection: aCardinalDirection
 	self subclassResponsibility.! !
 
 
@@ -296,6 +413,16 @@ nextStepForwardInThisDirection
 isMarsRoverFacing: aCardinalDirection
 	^#East = aCardinalDirection.! !
 
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'MarsRoverMovementRuleEast class' category: 'EjercicioMarsRoverTDD'!
+MarsRoverMovementRuleEast class
+	instanceVariableNames: ''!
+
+!MarsRoverMovementRuleEast class methodsFor: 'private' stamp: 'OO 11/3/2022 12:39:45'!
+isCompatibleWithDirection: aCardinalDirection
+	^#East = aCardinalDirection.! !
+
 
 !classDefinition: #MarsRoverMovementRuleNorth category: 'EjercicioMarsRoverTDD'!
 MarsRoverMovementRule subclass: #MarsRoverMovementRuleNorth
@@ -323,6 +450,16 @@ nextStepForwardInThisDirection
 
 !MarsRoverMovementRuleNorth methodsFor: 'testing' stamp: 'OO 11/2/2022 22:29:14'!
 isMarsRoverFacing: aCardinalDirection
+	^#North = aCardinalDirection.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'MarsRoverMovementRuleNorth class' category: 'EjercicioMarsRoverTDD'!
+MarsRoverMovementRuleNorth class
+	instanceVariableNames: ''!
+
+!MarsRoverMovementRuleNorth class methodsFor: 'private' stamp: 'OO 11/3/2022 12:39:56'!
+isCompatibleWithDirection: aCardinalDirection
 	^#North = aCardinalDirection.! !
 
 
@@ -354,6 +491,16 @@ nextStepForwardInThisDirection
 isMarsRoverFacing: aCardinalDirection
 	^#South = aCardinalDirection.! !
 
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'MarsRoverMovementRuleSouth class' category: 'EjercicioMarsRoverTDD'!
+MarsRoverMovementRuleSouth class
+	instanceVariableNames: ''!
+
+!MarsRoverMovementRuleSouth class methodsFor: 'private' stamp: 'OO 11/3/2022 12:40:06'!
+isCompatibleWithDirection: aCardinalDirection
+	^#South = aCardinalDirection.! !
+
 
 !classDefinition: #MarsRoverMovementRuleWest category: 'EjercicioMarsRoverTDD'!
 MarsRoverMovementRule subclass: #MarsRoverMovementRuleWest
@@ -381,4 +528,14 @@ nextStepForwardInThisDirection
 
 !MarsRoverMovementRuleWest methodsFor: 'testing' stamp: 'OO 11/2/2022 22:29:37'!
 isMarsRoverFacing: aCardinalDirection
+	^#West = aCardinalDirection.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'MarsRoverMovementRuleWest class' category: 'EjercicioMarsRoverTDD'!
+MarsRoverMovementRuleWest class
+	instanceVariableNames: ''!
+
+!MarsRoverMovementRuleWest class methodsFor: 'private' stamp: 'OO 11/3/2022 12:40:15'!
+isCompatibleWithDirection: aCardinalDirection
 	^#West = aCardinalDirection.! !
