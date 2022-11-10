@@ -5,7 +5,7 @@ TestCase subclass: #PortfolioTest
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
 
-!PortfolioTest methodsFor: 'setUp' stamp: 'OO 11/9/2022 16:31:29'!
+!PortfolioTest methodsFor: 'setup' stamp: 'OO 11/9/2022 16:31:29'!
 setUp
 
 	aPortfolio _ Portfolio new.
@@ -87,37 +87,12 @@ test08PortfolioWithNoAccountsAndAnotherPortfolioAddedAlsoWithNoAccountsDoesntHav
 	
 	self assert: (OrderedCollection new) equals: (aPortfolio transactions).! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'OO 11/9/2022 17:06:37'!
-test09CantRegisterATransactionOnAPortfolio	
+!PortfolioTest methodsFor: 'tests' stamp: 'FG 11/10/2022 13:13:37'!
+test09CanNotRegisterATransactionOnAPortfolio	
 		
-	self should:[Deposit register: 100*peso on: aPortfolio]  
-		 raise: Error  
-		withExceptionDo: [:anError | self assert: anError messageText equals: 'Cannot register aTransaction on a Portfolio.'].! !
-
-!PortfolioTest methodsFor: 'tests' stamp: 'OO 11/9/2022 17:18:55'!
-test10
-		
-	self should:[
-		
-		aPortfolio add: anAccountWithOneDeposit.
-		aPortfolio add: anAccountWithOneDeposit.		
-		
-		]  
-		 raise: Error  
-		withExceptionDo: [:anError | self assert: anError messageText equals: 'Cannot add an already existing account.'].! !
-
-!PortfolioTest methodsFor: 'tests' stamp: 'OO 11/9/2022 17:26:16'!
-test11
-		
-	self should:[
-		|aBigPortfolio|
-		aBigPortfolio _ Portfolio new.
-		aPortfolio add: anAccountWithOneDeposit.
-		aBigPortfolio add: aPortfolio.	
-		aBigPortfolio add: anAccountWithOneDeposit.	
-		]  
-		 raise: Error  
-		withExceptionDo: [:anError | self assert: anError messageText equals: 'Cannot add an already existing account.'].! !
+	self should: [Deposit register: 100*peso on: aPortfolio]  
+		raise: Error  
+		withExceptionDo: [:anError | self assert: Portfolio canNotRegisterATransactionErrorDescription equals: anError messageText].! !
 
 
 !classDefinition: #ReceptiveAccountTest category: 'ServiciosFinancieros-Ejercicio'!
@@ -305,6 +280,94 @@ setUp
 	recipientAccount := ReceptiveAccount new.! !
 
 
+!classDefinition: #ValidPortfolioTest category: 'ServiciosFinancieros-Ejercicio'!
+TestCase subclass: #ValidPortfolioTest
+	instanceVariableNames: 'anAccountWithOneDeposit basePortfolio childPortfolio parentPortfolio'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros-Ejercicio'!
+
+!ValidPortfolioTest methodsFor: 'tests' stamp: 'FG 11/10/2022 13:10:49'!
+test01PortfolioCanNotAddAnAccountItAlreadyContains
+	
+	basePortfolio add: anAccountWithOneDeposit.
+	
+	self should: [
+			basePortfolio add: anAccountWithOneDeposit.		
+		]  
+		raise: Error  
+		withExceptionDo: [:anError | self assert: Portfolio canNotAddAnExistingAccountErrorDescription equals: anError messageText].! !
+
+!ValidPortfolioTest methodsFor: 'tests' stamp: 'FG 11/10/2022 13:10:57'!
+test02PortfolioCanNotAddAccountPresentInChildPortfolio
+
+	childPortfolio add: anAccountWithOneDeposit.
+	parentPortfolio add: childPortfolio.	
+	
+	self should: [
+			parentPortfolio add: anAccountWithOneDeposit.	
+		]  
+		raise: Error 
+		withExceptionDo: [:anError | self assert: Portfolio canNotAddAnExistingAccountErrorDescription equals: anError messageText].! !
+
+!ValidPortfolioTest methodsFor: 'tests' stamp: 'FG 11/10/2022 13:11:02'!
+test03PortfolioCanNotAddItself
+	
+	self should: [
+			basePortfolio add: basePortfolio.	
+		]  
+		raise: Error 
+		withExceptionDo: [:anError | self assert: Portfolio canNotAddAnExistingAccountErrorDescription equals: anError messageText].! !
+
+!ValidPortfolioTest methodsFor: 'tests' stamp: 'FG 11/10/2022 13:11:06'!
+test04CanNotAddAccountToChildPortfolioIfParentPortfolioHasThatAccount
+
+	parentPortfolio add: anAccountWithOneDeposit.
+	parentPortfolio add: childPortfolio.	
+	
+	self should: [
+			childPortfolio add: anAccountWithOneDeposit.	
+		]  
+		raise: Error 
+		withExceptionDo: [:anError | self assert: Portfolio canNotAddAnExistingAccountErrorDescription equals: anError messageText].! !
+
+!ValidPortfolioTest methodsFor: 'tests' stamp: 'FG 11/10/2022 13:11:10'!
+test05CanNotAddAccountIfItIsPresentInParentPortfolio
+
+	parentPortfolio add: anAccountWithOneDeposit.
+	childPortfolio add: basePortfolio.	
+	parentPortfolio add: childPortfolio.	
+	
+	self should: [
+			basePortfolio add: anAccountWithOneDeposit.	
+		]  
+		raise: Error 
+		withExceptionDo: [:anError | self assert: Portfolio canNotAddAnExistingAccountErrorDescription equals: anError messageText].! !
+
+!ValidPortfolioTest methodsFor: 'tests' stamp: 'FG 11/10/2022 13:11:14'!
+test06PortfolioCanNotAddPortfolioContainingAtLeastOneAccountInCommon
+
+	childPortfolio add: anAccountWithOneDeposit.	
+	parentPortfolio add: anAccountWithOneDeposit.	
+	
+	self should: [
+			parentPortfolio add: childPortfolio.	
+		]
+		raise: Error 
+		withExceptionDo: [:anError | self assert: Portfolio canNotAddAnExistingAccountErrorDescription equals: anError messageText].! !
+
+
+!ValidPortfolioTest methodsFor: 'setup' stamp: 'FG 11/10/2022 12:56:24'!
+setUp
+	
+	basePortfolio _ Portfolio new.
+	childPortfolio _ Portfolio new.
+	parentPortfolio _ Portfolio new.
+
+	anAccountWithOneDeposit _ ReceptiveAccount new.
+	Deposit register: 100 on: anAccountWithOneDeposit.! !
+
+
 !classDefinition: #AccountTransaction category: 'ServiciosFinancieros-Ejercicio'!
 Object subclass: #AccountTransaction
 	instanceVariableNames: 'value'
@@ -312,7 +375,7 @@ Object subclass: #AccountTransaction
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
 
-!AccountTransaction methodsFor: 'private' stamp: 'OO 11/9/2022 16:07:08'!
+!AccountTransaction methodsFor: 'initialization' stamp: 'OO 11/9/2022 16:07:08'!
 initializeFor: aValue
 
 	value := aValue.! !
@@ -370,11 +433,11 @@ AccountTransaction subclass: #DepositTransferLeg
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
 
-!DepositTransferLeg methodsFor: 'accessing' stamp: 'OO 11/9/2022 15:45:59'!
+!DepositTransferLeg methodsFor: 'operations' stamp: 'OO 11/9/2022 15:45:59'!
 applyTo: aBalance
 	^aBalance + self value.! !
 
-!DepositTransferLeg methodsFor: 'accessing' stamp: 'OO 11/9/2022 15:57:11'!
+!DepositTransferLeg methodsFor: 'operations' stamp: 'OO 11/9/2022 15:57:11'!
 oppositeLeg
 	^oppositeLeg.! !
 
@@ -403,11 +466,11 @@ AccountTransaction subclass: #WithdrawTransferLeg
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
 
-!WithdrawTransferLeg methodsFor: 'accessing' stamp: 'OO 11/9/2022 15:46:33'!
+!WithdrawTransferLeg methodsFor: 'operations' stamp: 'OO 11/9/2022 15:46:33'!
 applyTo: aBalance
 	^aBalance - self value.! !
 
-!WithdrawTransferLeg methodsFor: 'accessing' stamp: 'OO 11/9/2022 15:57:16'!
+!WithdrawTransferLeg methodsFor: 'operations' stamp: 'OO 11/9/2022 15:57:16'!
 oppositeLeg
 	^oppositeLeg.! !
 
@@ -419,7 +482,7 @@ opposite: aTransferLeg
 
 !classDefinition: #BankAccount category: 'ServiciosFinancieros-Ejercicio'!
 Object subclass: #BankAccount
-	instanceVariableNames: ''
+	instanceVariableNames: 'parent'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
@@ -434,23 +497,45 @@ balance
 
 	self subclassResponsibility.! !
 
-!BankAccount methodsFor: 'main protocol' stamp: 'OO 11/9/2022 17:37:25'!
-equalOrContains: aBankAccount
-	self subclassResponsibility.! !
-
 !BankAccount methodsFor: 'main protocol' stamp: 'OO 11/9/2022 16:46:54'!
 hasRegistered: aTransaction
 	
 	self subclassResponsibility.! !
 
-!BankAccount methodsFor: 'main protocol' stamp: 'OO 11/9/2022 17:06:01'!
+!BankAccount methodsFor: 'main protocol' stamp: 'FG 11/10/2022 12:25:05'!
+isEqualToOrContains: aBankAccount
+	self subclassResponsibility.! !
+
+!BankAccount methodsFor: 'main protocol' stamp: 'FG 11/10/2022 13:16:46'!
 register: aTransaction
-	self error: 'Cannot register aTransaction on a Portfolio.' 
+	self subclassResponsibility.
 	! !
 
 !BankAccount methodsFor: 'main protocol' stamp: 'OO 11/9/2022 16:46:49'!
 transactions
 	self subclassResponsibility.! !
+
+
+!BankAccount methodsFor: 'private' stamp: 'FG 11/10/2022 11:46:01'!
+parent: aPortfolio
+	parent _ aPortfolio.
+	! !
+
+!BankAccount methodsFor: 'private' stamp: 'FG 11/10/2022 12:00:22'!
+root
+	parent = self ifTrue: [^self].
+	
+	^parent root.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'BankAccount class' category: 'ServiciosFinancieros-Ejercicio'!
+BankAccount class
+	instanceVariableNames: ''!
+
+!BankAccount class methodsFor: 'as yet unclassified' stamp: 'FG 11/10/2022 13:15:37'!
+canNotRegisterATransactionErrorDescription
+	^'Can not register a transaction in a portfolio'.! !
 
 
 !classDefinition: #Portfolio category: 'ServiciosFinancieros-Ejercicio'!
@@ -460,29 +545,34 @@ BankAccount subclass: #Portfolio
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
 
-!Portfolio methodsFor: 'main protocol' stamp: 'OO 11/9/2022 17:44:59'!
-add: aBankAccount
-	(accounts anySatisfy: [:anAccount | anAccount equalOrContains: aBankAccount]) ifTrue: [self error: 'Cannot add an already existing account.'].
-	accounts add: aBankAccount.! !
+!Portfolio methodsFor: 'main protocol' stamp: 'FG 11/10/2022 13:17:56'!
+add: aBankAccount	
+	
+	(self root isEqualToOrContains: aBankAccount) ifTrue: [self error: self class canNotAddAnExistingAccountErrorDescription].
+	
+	accounts add: aBankAccount.
+	aBankAccount parent: self.! !
 
 !Portfolio methodsFor: 'main protocol' stamp: 'FG 11/8/2022 20:50:05'!
 balance
 	^accounts sum: [ :anAccount | anAccount balance ] ifEmpty: [^0].! !
 
-!Portfolio methodsFor: 'main protocol' stamp: 'OO 11/9/2022 17:47:13'!
-equalOrContains: aBankAccount
-	
-	"self = aBankAccount ifTrue:[^true]."
-	
-	(accounts anySatisfy: [:anAccount | aBankAccount equalOrContains: anAccount]) ifTrue: [^true].
-	
-	^false.
-	! !
-
 !Portfolio methodsFor: 'main protocol' stamp: 'FG 11/8/2022 20:57:14'!
 hasRegistered: aTransaction 
 	
 	^accounts anySatisfy: [ :anAccount | anAccount hasRegistered: aTransaction ].! !
+
+!Portfolio methodsFor: 'main protocol' stamp: 'FG 11/10/2022 12:25:05'!
+isEqualToOrContains: aBankAccount
+	
+	self = aBankAccount ifTrue: [^true].
+
+	^(accounts anySatisfy: [:anAccount | (anAccount isEqualToOrContains: aBankAccount) or: [aBankAccount isEqualToOrContains: anAccount]])
+	! !
+
+!Portfolio methodsFor: 'main protocol' stamp: 'FG 11/10/2022 13:16:52'!
+register: aTransaction
+	self error: self class canNotRegisterATransactionErrorDescription.! !
 
 !Portfolio methodsFor: 'main protocol' stamp: 'OO 11/9/2022 17:40:19'!
 transactions
@@ -495,9 +585,24 @@ transactions
 	^allTransactions.! !
 
 
-!Portfolio methodsFor: 'initialization' stamp: 'FG 11/8/2022 20:47:18'!
+!Portfolio methodsFor: 'initialization' stamp: 'FG 11/10/2022 11:47:24'!
 initialize
-	accounts _ OrderedCollection new.! !
+	accounts _ OrderedCollection new.
+	self parent: self.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Portfolio class' category: 'ServiciosFinancieros-Ejercicio'!
+Portfolio class
+	instanceVariableNames: ''!
+
+!Portfolio class methodsFor: 'error description' stamp: 'FG 11/10/2022 13:13:24'!
+canNotAddAnExistingAccountErrorDescription
+	^'Can not add an already existing account.'! !
+
+!Portfolio class methodsFor: 'error description' stamp: 'FG 11/10/2022 13:13:20'!
+canNotRegisterATransactionErrorDescription
+	^'Can not register a Transaction on a Portfolio.'! !
 
 
 !classDefinition: #ReceptiveAccount category: 'ServiciosFinancieros-Ejercicio'!
@@ -526,16 +631,16 @@ balance
 	^balance.
 	! !
 
-!ReceptiveAccount methodsFor: 'main protocol' stamp: 'OO 11/9/2022 17:44:12'!
-equalOrContains: aBankAccount
-
-	^self = aBankAccount.! !
-
 !ReceptiveAccount methodsFor: 'main protocol' stamp: 'NR 10/17/2019 03:28:43'!
 hasRegistered: aTransaction
 
 	^ transactions includes: aTransaction 
 ! !
+
+!ReceptiveAccount methodsFor: 'main protocol' stamp: 'FG 11/10/2022 12:25:05'!
+isEqualToOrContains: aBankAccount
+
+	^self = aBankAccount.! !
 
 !ReceptiveAccount methodsFor: 'main protocol' stamp: 'HernanWilkinson 7/13/2011 18:37'!
 register: aTransaction
@@ -556,8 +661,8 @@ Object subclass: #Transfer
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
 
-!Transfer methodsFor: 'initialization' stamp: 'OO 11/9/2022 15:57:45'!
-initializeFrom: transferee to: recipient forValue: aValue 
+!Transfer methodsFor: 'initialization' stamp: 'FG 11/10/2022 13:20:26'!
+initializeFrom: transferee to: recipient for: aValue 
 	withdrawLeg _ WithdrawTransferLeg register: aValue on: transferee.
 	depositLeg _ DepositTransferLeg register: aValue on: recipient.
 	withdrawLeg opposite: depositLeg.
@@ -583,12 +688,12 @@ withdrawLeg
 Transfer class
 	instanceVariableNames: ''!
 
-!Transfer class methodsFor: 'instance creation' stamp: 'FG 11/6/2022 15:44:46'!
+!Transfer class methodsFor: 'instance creation' stamp: 'FG 11/10/2022 13:20:26'!
 from: aTranferee to: aRecipient forValue: aValue
 	aValue = (0*peso) ifTrue: [ self error: self canNotTransfer0ValueErrorDescription ].
 	aValue < (0*peso) ifTrue: [ self error: self canNotTransferNegativeValueErrorDescription ].
 
-	^self new initializeFrom: aTranferee to: aRecipient forValue: aValue ! !
+	^self new initializeFrom: aTranferee to: aRecipient for: aValue ! !
 
 
 !Transfer class methodsFor: 'error descriptions' stamp: 'FG 11/6/2022 15:44:06'!
