@@ -502,8 +502,8 @@ hasRegistered: aTransaction
 	
 	self subclassResponsibility.! !
 
-!BankAccount methodsFor: 'main protocol' stamp: 'FG 11/10/2022 12:25:05'!
-isEqualToOrContains: aBankAccount
+!BankAccount methodsFor: 'main protocol' stamp: 'OO 11/11/2022 13:25:55'!
+isEqualToOrContainsOrIsContainedBy: aBankAccount
 	self subclassResponsibility.! !
 
 !BankAccount methodsFor: 'main protocol' stamp: 'FG 11/10/2022 13:16:46'!
@@ -516,16 +516,16 @@ transactions
 	self subclassResponsibility.! !
 
 
+!BankAccount methodsFor: 'private' stamp: 'OO 11/11/2022 13:42:34'!
+findRootPortfolio
+	parent = self ifTrue: [^self].
+	
+	^parent findRootPortfolio.! !
+
 !BankAccount methodsFor: 'private' stamp: 'FG 11/10/2022 11:46:01'!
 parent: aPortfolio
 	parent _ aPortfolio.
 	! !
-
-!BankAccount methodsFor: 'private' stamp: 'FG 11/10/2022 12:00:22'!
-root
-	parent = self ifTrue: [^self].
-	
-	^parent root.! !
 
 
 !classDefinition: #Portfolio category: 'ServiciosFinancieros-Ejercicio'!
@@ -535,10 +535,11 @@ BankAccount subclass: #Portfolio
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
 
-!Portfolio methodsFor: 'main protocol' stamp: 'FG 11/10/2022 13:17:56'!
+!Portfolio methodsFor: 'main protocol' stamp: 'OO 11/11/2022 13:42:34'!
 add: aBankAccount	
 	
-	(self root isEqualToOrContains: aBankAccount) ifTrue: [self error: self class canNotAddAnExistingAccountErrorDescription].
+	(self findRootPortfolio isEqualToOrContainsOrIsContainedBy: aBankAccount) 
+		ifTrue: [self error: self class canNotAddAnExistingAccountErrorDescription].
 	
 	accounts add: aBankAccount.
 	aBankAccount parent: self.! !
@@ -552,13 +553,14 @@ hasRegistered: aTransaction
 	
 	^accounts anySatisfy: [ :anAccount | anAccount hasRegistered: aTransaction ].! !
 
-!Portfolio methodsFor: 'main protocol' stamp: 'FG 11/10/2022 12:25:05'!
-isEqualToOrContains: aBankAccount
+!Portfolio methodsFor: 'main protocol' stamp: 'OO 11/11/2022 13:26:21'!
+isEqualToOrContainsOrIsContainedBy: aBankAccount
 	
 	self = aBankAccount ifTrue: [^true].
 
-	^(accounts anySatisfy: [:anAccount | (anAccount isEqualToOrContains: aBankAccount) or: [aBankAccount isEqualToOrContains: anAccount]])
-	! !
+	^(accounts anySatisfy: [:anAccount | 
+								(anAccount isEqualToOrContainsOrIsContainedBy: aBankAccount) 
+						or: 		[aBankAccount isEqualToOrContainsOrIsContainedBy: anAccount]])! !
 
 !Portfolio methodsFor: 'main protocol' stamp: 'FG 11/10/2022 13:16:52'!
 register: aTransaction
@@ -609,7 +611,7 @@ initialize
 ! !
 
 
-!ReceptiveAccount methodsFor: 'main protocol' stamp: 'FG 11/8/2022 20:43:02'!
+!ReceptiveAccount methodsFor: 'main protocol' stamp: 'OO 11/11/2022 13:51:58'!
 balance
 	| balance |
 	balance _ 0.
@@ -627,8 +629,8 @@ hasRegistered: aTransaction
 	^ transactions includes: aTransaction 
 ! !
 
-!ReceptiveAccount methodsFor: 'main protocol' stamp: 'FG 11/10/2022 12:25:05'!
-isEqualToOrContains: aBankAccount
+!ReceptiveAccount methodsFor: 'main protocol' stamp: 'OO 11/11/2022 13:25:55'!
+isEqualToOrContainsOrIsContainedBy: aBankAccount
 
 	^self = aBankAccount.! !
 
