@@ -527,16 +527,6 @@ root
 	
 	^parent root.! !
 
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'BankAccount class' category: 'ServiciosFinancieros-Ejercicio'!
-BankAccount class
-	instanceVariableNames: ''!
-
-!BankAccount class methodsFor: 'as yet unclassified' stamp: 'FG 11/10/2022 13:15:37'!
-canNotRegisterATransactionErrorDescription
-	^'Can not register a transaction in a portfolio'.! !
-
 
 !classDefinition: #Portfolio category: 'ServiciosFinancieros-Ejercicio'!
 BankAccount subclass: #Portfolio
@@ -600,9 +590,9 @@ Portfolio class
 canNotAddAnExistingAccountErrorDescription
 	^'Can not add an already existing account.'! !
 
-!Portfolio class methodsFor: 'error description' stamp: 'FG 11/10/2022 13:13:20'!
+!Portfolio class methodsFor: 'error description' stamp: 'FG 11/11/2022 12:42:19'!
 canNotRegisterATransactionErrorDescription
-	^'Can not register a Transaction on a Portfolio.'! !
+	^'Can not register a transaction in a portfolio'.! !
 
 
 !classDefinition: #ReceptiveAccount category: 'ServiciosFinancieros-Ejercicio'!
