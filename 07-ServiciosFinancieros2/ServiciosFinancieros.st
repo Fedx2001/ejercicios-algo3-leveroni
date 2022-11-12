@@ -572,6 +572,19 @@ accountSummary
 	
 	^report.! !
 
+
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'FG 11/12/2022 17:33:10'!
+netTransferReport
+	
+	| total |
+	total _ 0*peso.
+	
+	accounts isEmpty ifTrue: [^0*peso.].
+	
+	accounts do: [ :anAccount | total _ total + anAccount netTransferReport ].
+	
+	^total.! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'Portfolio class' category: 'ServiciosFinancieros-SolucionExtraParte1Catedra'!
@@ -679,6 +692,23 @@ accountSummary
 	aCollectionOfStrings add: ('Balance = ', self balance asString).
 	
 	^aCollectionOfStrings.! !
+
+!ReceptiveAccount methodsFor: 'reportes' stamp: 'FG 11/12/2022 17:21:10'!
+netTransferReport	
+	
+	| total |
+	total _ 0*peso.
+	
+	transactions do: [ :transaction |  
+		(transaction isKindOf: TransferWithdrawLeg) ifTrue: [
+			total _ transaction affectBalance: total.
+		].
+		(transaction isKindOf: TransferDepositLeg) ifTrue: [
+			total _ transaction affectBalance: total.
+		].
+	].
+
+	^total.! !
 
 
 !classDefinition: #AccountTransaction category: 'ServiciosFinancieros-SolucionExtraParte1Catedra'!
@@ -958,15 +988,15 @@ amount: anAmountOfMoney from: originAccount to: destinationAccount
 	
 	
 	! !
-!classDefinition: #AccountSummaryTest category: 'ServiciosFinancieros-Parte2'!
-TestCase subclass: #AccountSummaryTest
+!classDefinition: #AccountSummaryReportTest category: 'ServiciosFinancieros-Parte2'!
+TestCase subclass: #AccountSummaryReportTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Parte2'!
 
-!AccountSummaryTest methodsFor: 'tests' stamp: 'FG 11/12/2022 12:46:53'!
-test01
+!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 16:28:27'!
+test01SummaryOfAccountWithNoTransactionsHasBalanceOf0Pesos
 	
 	| anAccount expectedResult |
 	anAccount _ ReceptiveAccount new.
@@ -975,8 +1005,8 @@ test01
 	
 	self assert: expectedResult equals: anAccount accountSummary.! !
 
-!AccountSummaryTest methodsFor: 'tests' stamp: 'FG 11/12/2022 12:46:53'!
-test02
+!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 16:28:34'!
+test02SummaryOfAccountWithOneDepositHasBalanceAndDeposit
 	
 	| anAccount expectedReport |
 	anAccount _ ReceptiveAccount new.
@@ -987,8 +1017,8 @@ test02
 	
 	self assert: expectedReport equals: anAccount accountSummary.! !
 
-!AccountSummaryTest methodsFor: 'tests' stamp: 'FG 11/12/2022 12:46:53'!
-test03
+!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 16:31:25'!
+test03SummaryOfAccountWithMultipleDepositsHasAllDeposits
 	
 	| anAccount expectedReport |
 	anAccount _ ReceptiveAccount new.
@@ -1000,8 +1030,8 @@ test03
 	
 	self assert: expectedReport equals: anAccount accountSummary.! !
 
-!AccountSummaryTest methodsFor: 'tests' stamp: 'FG 11/12/2022 12:46:53'!
-test04
+!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 16:30:46'!
+test04SummaryOfAccountWithOneWithdrawalHasBalanceAndWithdraw
 	
 	| anAccount expectedReport |
 	anAccount _ ReceptiveAccount new.
@@ -1012,8 +1042,8 @@ test04
 	
 	self assert: expectedReport equals: anAccount accountSummary.! !
 
-!AccountSummaryTest methodsFor: 'tests' stamp: 'FG 11/12/2022 12:46:53'!
-test05
+!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 16:31:19'!
+test05SummaryOfAccountWithMultipleWithdrawsHasAllWithdraws
 	
 	| anAccount expectedReport |
 	anAccount _ ReceptiveAccount new.
@@ -1025,8 +1055,8 @@ test05
 	
 	self assert: expectedReport equals: anAccount accountSummary.! !
 
-!AccountSummaryTest methodsFor: 'tests' stamp: 'FG 11/12/2022 12:46:53'!
-test06
+!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 16:32:22'!
+test06SummaryOfAccountThatTransferedHasTransferLegAndBalance
 	
 	| originAccount expectedReport recipientAccount |
 	originAccount _ ReceptiveAccount new.
@@ -1038,8 +1068,8 @@ test06
 	
 	self assert: expectedReport equals: originAccount accountSummary.! !
 
-!AccountSummaryTest methodsFor: 'tests' stamp: 'FG 11/12/2022 12:46:53'!
-test07
+!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 16:33:50'!
+test07SummaryOfAccountThatTransferedMultipleTimesHasTransferLegsAndBalance
 	
 	| originAccount expectedReport recipientAccount |
 	originAccount _ ReceptiveAccount new.
@@ -1052,8 +1082,8 @@ test07
 	
 	self assert: expectedReport equals: originAccount accountSummary.! !
 
-!AccountSummaryTest methodsFor: 'tests' stamp: 'FG 11/12/2022 12:46:53'!
-test08
+!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 16:33:12'!
+test08SummaryOfAccountThatReceivedATransferHasTransferLegAndBalance
 	
 	| originAccount expectedReport recipientAccount |
 	originAccount _ ReceptiveAccount new.
@@ -1065,8 +1095,8 @@ test08
 	
 	self assert: expectedReport equals: recipientAccount accountSummary.! !
 
-!AccountSummaryTest methodsFor: 'tests' stamp: 'FG 11/12/2022 12:46:53'!
-test09
+!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 16:33:42'!
+test09SummaryOfAccountThatReceivedMultipleTransferencesHasTransferLegsAndBalance
 	
 	| originAccount expectedReport recipientAccount |
 	originAccount _ ReceptiveAccount new.
@@ -1079,8 +1109,8 @@ test09
 	
 	self assert: expectedReport equals: recipientAccount accountSummary.! !
 
-!AccountSummaryTest methodsFor: 'tests' stamp: 'FG 11/12/2022 12:46:53'!
-test10
+!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 16:35:05'!
+test10SummaryOfPortfolioWithNoAccountsHasCeroBalance
 	
 	| aPortfolio expectedReport |
 	aPortfolio _ Portfolio new.
@@ -1089,8 +1119,8 @@ test10
 	
 	self assert: expectedReport equals: aPortfolio accountSummary.! !
 
-!AccountSummaryTest methodsFor: 'tests' stamp: 'FG 11/12/2022 12:46:53'!
-test11
+!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 16:35:32'!
+test11SummaryOfPortfolioWithAnAccountWithDepositHasDepositAndBalance
 	
 	| aPortfolio aReceptiveAccount expectedReport |
 	aReceptiveAccount _ ReceptiveAccount new.
@@ -1102,8 +1132,8 @@ test11
 	
 	self assert: expectedReport equals: aPortfolio accountSummary.! !
 
-!AccountSummaryTest methodsFor: 'tests' stamp: 'FG 11/12/2022 12:46:53'!
-test12
+!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 16:36:46'!
+test12SummaryOfPortfolioWithMultipleAccountsHasDepositsOfAccountsAndBalance
 	
 	| aPortfolio aReceptiveAccount expectedReport aReceptiveAccount2 |
 	aReceptiveAccount _ ReceptiveAccount new.
@@ -1117,8 +1147,8 @@ test12
 	
 	self assert: expectedReport equals: aPortfolio accountSummary.! !
 
-!AccountSummaryTest methodsFor: 'tests' stamp: 'FG 11/12/2022 12:46:53'!
-test13
+!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 16:37:09'!
+test13SummaryOfParentPortfolioWithChildPortfolioAndAccountHasDepositOfAccountAndBalance
 	
 	| aPortfolio expectedReport anAccount parentPortfolio |
 	anAccount _ ReceptiveAccount new.
@@ -1132,9 +1162,122 @@ test13
 	self assert: expectedReport equals: parentPortfolio accountSummary.! !
 
 
-!classDefinition: #XXXTest category: 'ServiciosFinancieros-Parte2'!
-TestCase subclass: #XXXTest
+!classDefinition: #NetTransferReportTest category: 'ServiciosFinancieros-Parte2'!
+TestCase subclass: #NetTransferReportTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Parte2'!
+
+!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 17:37:59'!
+test01ReceptiveAccountWithNoTransfersHas0pesosNetTransferReport
+	
+	| originAccount |
+	originAccount _ ReceptiveAccount new.
+	
+	self assert: 0*peso equals: originAccount netTransferReport.! !
+
+!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 17:43:23'!
+test02NetTransferReportFromOriginOfTransferAccountWithOnlyOneTransferIsTheExpected
+	
+	| originAccount recipientAccount |
+	originAccount _ ReceptiveAccount new.
+	recipientAccount _ ReceptiveAccount new.
+	
+	Transfer amount: 10*peso from: originAccount to: recipientAccount. 
+	
+	self assert: -10*peso equals: originAccount netTransferReport.! !
+
+!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 17:13:57'!
+test03
+	
+	| originAccount recipientAccount |
+	originAccount _ ReceptiveAccount new.
+	recipientAccount _ ReceptiveAccount new.
+	
+	Transfer amount: 10*peso from: originAccount to: recipientAccount. 
+	
+	self assert: 10*peso equals: recipientAccount netTransferReport.! !
+
+!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 17:14:09'!
+test04
+	
+	| originAccount recipientAccount |
+	originAccount _ ReceptiveAccount new.
+	recipientAccount _ ReceptiveAccount new.
+	
+	Transfer amount: 10*peso from: originAccount to: recipientAccount.
+	Transfer amount: 10*peso from: originAccount to: recipientAccount. 
+	
+	self assert: -20*peso equals: originAccount netTransferReport.! !
+
+!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 17:20:07'!
+test05
+	
+	| originAccount recipientAccount |
+	originAccount _ ReceptiveAccount new.
+	recipientAccount _ ReceptiveAccount new.
+	
+	Transfer amount: 10*peso from: originAccount to: recipientAccount.
+	Transfer amount: 10*peso from: originAccount to: recipientAccount.
+	Deposit register: 100*peso on: originAccount.
+	
+	self assert: -20*peso equals: originAccount netTransferReport.
+	self assert: 80*peso equals: originAccount balance.! !
+
+!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 17:24:03'!
+test06
+	
+	| portfolio |
+	portfolio _ Portfolio new.
+	
+	self assert: 0*peso equals: portfolio netTransferReport.! !
+
+!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 17:24:33'!
+test07
+	
+	| originAccount recipientAccount portfolio |
+	originAccount _ ReceptiveAccount new.
+	recipientAccount _ ReceptiveAccount new.
+	portfolio _ Portfolio with: originAccount.
+	
+	Transfer amount: 10*peso from: originAccount to: recipientAccount.
+	
+	self assert: -10*peso equals: portfolio netTransferReport.! !
+
+!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 17:26:06'!
+test08
+	
+	| originAccount recipientAccount portfolio |
+	originAccount _ ReceptiveAccount new.
+	recipientAccount _ ReceptiveAccount new.
+	portfolio _ Portfolio with: recipientAccount.
+	
+	Transfer amount: 10*peso from: originAccount to: recipientAccount.
+	
+	self assert: 10*peso equals: portfolio netTransferReport.! !
+
+!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 17:30:36'!
+test09
+	
+	| originAccount recipientAccount portfolio |
+	originAccount _ ReceptiveAccount new.
+	recipientAccount _ ReceptiveAccount new.
+	portfolio _ Portfolio with: recipientAccount.
+	
+	Transfer amount: 10*peso from: originAccount to: recipientAccount.
+	Transfer amount: 10*peso from: originAccount to: recipientAccount.
+	
+	self assert: 20*peso equals: portfolio netTransferReport.! !
+
+!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 17:35:41'!
+test10
+	
+	| originAccount recipientAccount portfolio |
+	originAccount _ ReceptiveAccount new.
+	recipientAccount _ ReceptiveAccount new.
+	portfolio _ Portfolio with: (Portfolio with: recipientAccount).
+	
+	Transfer amount: 10*peso from: originAccount to: recipientAccount.
+	
+	self assert: 10*peso equals: portfolio netTransferReport.! !
