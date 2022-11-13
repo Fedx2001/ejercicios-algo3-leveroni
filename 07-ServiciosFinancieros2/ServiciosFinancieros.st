@@ -572,8 +572,7 @@ accountSummary
 	
 	^report.! !
 
-
-!Portfolio methodsFor: 'as yet unclassified' stamp: 'FG 11/12/2022 17:33:10'!
+!Portfolio methodsFor: 'reportes' stamp: 'FG 11/12/2022 17:33:10'!
 netTransferReport
 	
 	| total |
@@ -667,49 +666,6 @@ isComposedBy: anAccount
 
 	^self = anAccount ! !
 
-
-!ReceptiveAccount methodsFor: 'reportes' stamp: 'FG 11/12/2022 12:47:21'!
-accountSummary
-	
-	| aCollectionOfStrings |
-	aCollectionOfStrings _ OrderedCollection new.
-	
-	transactions do: [ :aTransaction | 
-		(aTransaction isKindOf: Deposit) ifTrue: [
-			aCollectionOfStrings add: 'Depósito por ', aTransaction value asString.
-		].
-		(aTransaction isKindOf: Withdraw) ifTrue: [
-			aCollectionOfStrings add: 'Extracción por ', aTransaction value asString.
-		].
-		(aTransaction isKindOf: TransferWithdrawLeg) ifTrue: [
-			aCollectionOfStrings add: 'Salida por transferencia de ', aTransaction value asString.
-		].
-		(aTransaction isKindOf: TransferDepositLeg) ifTrue: [
-			aCollectionOfStrings add: 'Entrada por transferencia de ', aTransaction value asString.
-		].
-	].
-	
-	aCollectionOfStrings add: ('Balance = ', self balance asString).
-	
-	^aCollectionOfStrings.! !
-
-!ReceptiveAccount methodsFor: 'reportes' stamp: 'FG 11/12/2022 17:21:10'!
-netTransferReport	
-	
-	| total |
-	total _ 0*peso.
-	
-	transactions do: [ :transaction |  
-		(transaction isKindOf: TransferWithdrawLeg) ifTrue: [
-			total _ transaction affectBalance: total.
-		].
-		(transaction isKindOf: TransferDepositLeg) ifTrue: [
-			total _ transaction affectBalance: total.
-		].
-	].
-
-	^total.! !
-
 
 !classDefinition: #AccountTransaction category: 'ServiciosFinancieros-SolucionExtraParte1Catedra'!
 Object subclass: #AccountTransaction
@@ -728,6 +684,12 @@ value
 affectBalance: aBalance
 
 	self subclassResponsibility ! !
+
+
+!AccountTransaction methodsFor: 'dd' stamp: 'FG 11/13/2022 12:42:05'!
+processFor: aReport
+
+	self subclassResponsibility.! !
 
 
 !classDefinition: #Deposit category: 'ServiciosFinancieros-SolucionExtraParte1Catedra'!
@@ -753,6 +715,12 @@ value
 affectBalance: aBalance
 
 	^aBalance + value ! !
+
+
+!Deposit methodsFor: 'dd' stamp: 'FG 11/13/2022 12:48:22'!
+processFor: aReport
+
+	^aReport processDeposit: self.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -830,6 +798,12 @@ affectBalance: aBalance
 
 	^aBalance + self value! !
 
+
+!TransferDepositLeg methodsFor: 'dd' stamp: 'FG 11/13/2022 12:48:30'!
+processFor: aReport
+
+	^aReport processTransferDepositLeg: self.! !
+
 
 !classDefinition: #TransferWithdrawLeg category: 'ServiciosFinancieros-SolucionExtraParte1Catedra'!
 TransferLeg subclass: #TransferWithdrawLeg
@@ -848,6 +822,12 @@ depositLeg
 affectBalance: aBalance
 
 	^aBalance - self value! !
+
+
+!TransferWithdrawLeg methodsFor: 'dd' stamp: 'FG 11/13/2022 12:48:35'!
+processFor: aReport
+
+	^aReport processTransferWithdrawLeg: self.! !
 
 
 !classDefinition: #Withdraw category: 'ServiciosFinancieros-SolucionExtraParte1Catedra'!
@@ -873,6 +853,12 @@ value
 affectBalance: aBalance
 
 	^aBalance - value! !
+
+
+!Withdraw methodsFor: 'dd' stamp: 'FG 11/13/2022 12:48:39'!
+processFor: aReport
+
+	^aReport processWithdraw: self.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -995,32 +981,36 @@ TestCase subclass: #AccountSummaryReportTest
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Parte2'!
 
-!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 16:28:27'!
+!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/13/2022 12:09:56'!
 test01SummaryOfAccountWithNoTransactionsHasBalanceOf0Pesos
 	
-	| anAccount expectedResult |
+	| anAccount expectedResult aReport |
 	anAccount _ ReceptiveAccount new.
 	
 	expectedResult _ OrderedCollection with: 'Balance = 0 * pesos'.
 	
-	self assert: expectedResult equals: anAccount accountSummary.! !
+	aReport _ AccountSummaryReport generateFor: anAccount.
+	
+	self assert: expectedResult equals: aReport yieldResult.! !
 
-!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 16:28:34'!
+!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/13/2022 12:10:23'!
 test02SummaryOfAccountWithOneDepositHasBalanceAndDeposit
 	
-	| anAccount expectedReport |
+	| anAccount expectedReport aReport |
 	anAccount _ ReceptiveAccount new.
 	
 	Deposit register: 100*peso on: anAccount.
 	
 	expectedReport _ OrderedCollection with: 'Depósito por 100 * pesos' with: 'Balance = 100 * pesos'.
 	
-	self assert: expectedReport equals: anAccount accountSummary.! !
+	aReport _ AccountSummaryReport generateFor: anAccount.
+	
+	self assert: expectedReport equals: aReport yieldResult.! !
 
-!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 16:31:25'!
+!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/13/2022 12:10:38'!
 test03SummaryOfAccountWithMultipleDepositsHasAllDeposits
 	
-	| anAccount expectedReport |
+	| anAccount expectedReport aReport |
 	anAccount _ ReceptiveAccount new.
 	
 	Deposit register: 100*peso on: anAccount.
@@ -1028,24 +1018,28 @@ test03SummaryOfAccountWithMultipleDepositsHasAllDeposits
 	
 	expectedReport _ OrderedCollection with: 'Depósito por 100 * pesos' with: 'Depósito por 10 * pesos' with: 'Balance = 110 * pesos'.
 	
-	self assert: expectedReport equals: anAccount accountSummary.! !
+	aReport _ AccountSummaryReport generateFor: anAccount.
+	
+	self assert: expectedReport equals: aReport yieldResult.! !
 
-!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 16:30:46'!
+!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/13/2022 12:10:44'!
 test04SummaryOfAccountWithOneWithdrawalHasBalanceAndWithdraw
 	
-	| anAccount expectedReport |
+	| anAccount expectedReport aReport |
 	anAccount _ ReceptiveAccount new.
 	
 	Withdraw register: 100*peso on: anAccount.
 	
 	expectedReport _ OrderedCollection with: 'Extracción por 100 * pesos' with: 'Balance = -100 * pesos'.
 	
-	self assert: expectedReport equals: anAccount accountSummary.! !
+	aReport _ AccountSummaryReport generateFor: anAccount.
+	
+	self assert: expectedReport equals: aReport yieldResult.! !
 
-!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 16:31:19'!
+!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/13/2022 12:11:03'!
 test05SummaryOfAccountWithMultipleWithdrawsHasAllWithdraws
 	
-	| anAccount expectedReport |
+	| anAccount expectedReport aReport |
 	anAccount _ ReceptiveAccount new.
 	
 	Withdraw register: 100*peso on: anAccount.
@@ -1053,12 +1047,14 @@ test05SummaryOfAccountWithMultipleWithdrawsHasAllWithdraws
 	
 	expectedReport _ OrderedCollection with: 'Extracción por 100 * pesos' with: 'Extracción por 50 * pesos' with: 'Balance = -150 * pesos'.
 	
-	self assert: expectedReport equals: anAccount accountSummary.! !
+	aReport _ AccountSummaryReport generateFor: anAccount.
+	
+	self assert: expectedReport equals: aReport yieldResult.! !
 
-!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 16:32:22'!
+!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/13/2022 12:11:44'!
 test06SummaryOfAccountThatTransferedHasTransferLegAndBalance
 	
-	| originAccount expectedReport recipientAccount |
+	| originAccount expectedReport recipientAccount aReport |
 	originAccount _ ReceptiveAccount new.
 	recipientAccount _ ReceptiveAccount new.
 	
@@ -1066,12 +1062,14 @@ test06SummaryOfAccountThatTransferedHasTransferLegAndBalance
 		
 	expectedReport _ OrderedCollection with: 'Salida por transferencia de 100 * pesos' with: 'Balance = -100 * pesos'.
 	
-	self assert: expectedReport equals: originAccount accountSummary.! !
+	aReport _ AccountSummaryReport generateFor: originAccount.
+	
+	self assert: expectedReport equals: aReport yieldResult.! !
 
-!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 16:33:50'!
+!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/13/2022 12:12:48'!
 test07SummaryOfAccountThatTransferedMultipleTimesHasTransferLegsAndBalance
 	
-	| originAccount expectedReport recipientAccount |
+	| originAccount expectedReport recipientAccount aReport |
 	originAccount _ ReceptiveAccount new.
 	recipientAccount _ ReceptiveAccount new.
 	
@@ -1080,12 +1078,14 @@ test07SummaryOfAccountThatTransferedMultipleTimesHasTransferLegsAndBalance
 			
 	expectedReport _ OrderedCollection with: 'Salida por transferencia de 100 * pesos' with: 'Salida por transferencia de 200 * pesos' with: 'Balance = -300 * pesos'.
 	
-	self assert: expectedReport equals: originAccount accountSummary.! !
+	aReport _ AccountSummaryReport generateFor: originAccount.
+	
+	self assert: expectedReport equals: aReport yieldResult.! !
 
-!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 16:33:12'!
+!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/13/2022 12:13:11'!
 test08SummaryOfAccountThatReceivedATransferHasTransferLegAndBalance
 	
-	| originAccount expectedReport recipientAccount |
+	| originAccount expectedReport recipientAccount aReport |
 	originAccount _ ReceptiveAccount new.
 	recipientAccount _ ReceptiveAccount new.
 	
@@ -1093,12 +1093,14 @@ test08SummaryOfAccountThatReceivedATransferHasTransferLegAndBalance
 			
 	expectedReport _ OrderedCollection with: 'Entrada por transferencia de 100 * pesos' with: 'Balance = 100 * pesos'.
 	
-	self assert: expectedReport equals: recipientAccount accountSummary.! !
+	aReport _ AccountSummaryReport generateFor: recipientAccount.
+	
+	self assert: expectedReport equals: aReport yieldResult.! !
 
-!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 16:33:42'!
+!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/13/2022 12:13:23'!
 test09SummaryOfAccountThatReceivedMultipleTransferencesHasTransferLegsAndBalance
 	
-	| originAccount expectedReport recipientAccount |
+	| originAccount expectedReport recipientAccount aReport |
 	originAccount _ ReceptiveAccount new.
 	recipientAccount _ ReceptiveAccount new.
 	
@@ -1107,22 +1109,26 @@ test09SummaryOfAccountThatReceivedMultipleTransferencesHasTransferLegsAndBalance
 			
 	expectedReport _ OrderedCollection with: 'Entrada por transferencia de 100 * pesos' with: 'Entrada por transferencia de 200 * pesos' with: 'Balance = 300 * pesos'.
 	
-	self assert: expectedReport equals: recipientAccount accountSummary.! !
+	aReport _ AccountSummaryReport generateFor: recipientAccount.
+	
+	self assert: expectedReport equals: aReport yieldResult.! !
 
-!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 16:35:05'!
+!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/13/2022 12:13:33'!
 test10SummaryOfPortfolioWithNoAccountsHasCeroBalance
 	
-	| aPortfolio expectedReport |
+	| aPortfolio expectedReport aReport |
 	aPortfolio _ Portfolio new.
 	
 	expectedReport _ OrderedCollection with: 'Balance = 0 * pesos'.
 	
-	self assert: expectedReport equals: aPortfolio accountSummary.! !
+	aReport _ AccountSummaryReport generateFor: aPortfolio.
+	
+	self assert: expectedReport equals: aReport yieldResult.! !
 
-!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 16:35:32'!
+!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/13/2022 12:13:44'!
 test11SummaryOfPortfolioWithAnAccountWithDepositHasDepositAndBalance
 	
-	| aPortfolio aReceptiveAccount expectedReport |
+	| aPortfolio aReceptiveAccount expectedReport aReport |
 	aReceptiveAccount _ ReceptiveAccount new.
 	aPortfolio _ Portfolio with: aReceptiveAccount.
 	
@@ -1130,12 +1136,14 @@ test11SummaryOfPortfolioWithAnAccountWithDepositHasDepositAndBalance
 	
 	expectedReport _ OrderedCollection with: 'Depósito por 100 * pesos' with: 'Balance = 100 * pesos'.
 	
-	self assert: expectedReport equals: aPortfolio accountSummary.! !
+	aReport _ AccountSummaryReport generateFor: aPortfolio.
+	
+	self assert: expectedReport equals: aReport yieldResult.! !
 
-!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 16:36:46'!
+!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/13/2022 12:13:55'!
 test12SummaryOfPortfolioWithMultipleAccountsHasDepositsOfAccountsAndBalance
 	
-	| aPortfolio aReceptiveAccount expectedReport aReceptiveAccount2 |
+	| aPortfolio aReceptiveAccount expectedReport aReceptiveAccount2 aReport |
 	aReceptiveAccount _ ReceptiveAccount new.
 	aReceptiveAccount2 _ ReceptiveAccount new.
 	aPortfolio _ Portfolio with: aReceptiveAccount with: aReceptiveAccount2.
@@ -1145,12 +1153,14 @@ test12SummaryOfPortfolioWithMultipleAccountsHasDepositsOfAccountsAndBalance
 	
 	expectedReport _ OrderedCollection with: 'Depósito por 100 * pesos' with: 'Depósito por 200 * pesos' with: 'Balance = 300 * pesos'.
 	
-	self assert: expectedReport equals: aPortfolio accountSummary.! !
+	aReport _ AccountSummaryReport generateFor: aPortfolio.
+	
+	self assert: expectedReport equals: aReport yieldResult.! !
 
-!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 16:37:09'!
+!AccountSummaryReportTest methodsFor: 'tests' stamp: 'FG 11/13/2022 12:14:07'!
 test13SummaryOfParentPortfolioWithChildPortfolioAndAccountHasDepositOfAccountAndBalance
 	
-	| aPortfolio expectedReport anAccount parentPortfolio |
+	| aPortfolio expectedReport anAccount parentPortfolio aReport |
 	anAccount _ ReceptiveAccount new.
 	aPortfolio _ Portfolio with: anAccount.
 	parentPortfolio _ Portfolio with: aPortfolio.
@@ -1159,7 +1169,9 @@ test13SummaryOfParentPortfolioWithChildPortfolioAndAccountHasDepositOfAccountAnd
 	
 	expectedReport _ OrderedCollection with: 'Depósito por 100 * pesos' with: 'Balance = 100 * pesos'.
 	
-	self assert: expectedReport equals: parentPortfolio accountSummary.! !
+	aReport _ AccountSummaryReport generateFor: parentPortfolio.
+	
+	self assert: expectedReport equals: aReport yieldResult.! !
 
 
 !classDefinition: #NetTransferReportTest category: 'ServiciosFinancieros-Parte2'!
@@ -1169,52 +1181,60 @@ TestCase subclass: #NetTransferReportTest
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Parte2'!
 
-!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 17:37:59'!
+!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/13/2022 12:14:49'!
 test01ReceptiveAccountWithNoTransfersHas0pesosNetTransferReport
 	
-	| originAccount |
+	| originAccount aReport |
 	originAccount _ ReceptiveAccount new.
 	
-	self assert: 0*peso equals: originAccount netTransferReport.! !
+	aReport _ NetTransferReport generateFor: originAccount.
+	
+	self assert: 0*peso equals: aReport yieldResult.! !
 
-!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 17:43:23'!
+!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/13/2022 12:15:29'!
 test02NetTransferReportFromOriginOfTransferAccountWithOnlyOneTransferIsTheExpected
 	
-	| originAccount recipientAccount |
+	| originAccount recipientAccount aReport |
 	originAccount _ ReceptiveAccount new.
 	recipientAccount _ ReceptiveAccount new.
 	
 	Transfer amount: 10*peso from: originAccount to: recipientAccount. 
 	
-	self assert: -10*peso equals: originAccount netTransferReport.! !
+	aReport _ NetTransferReport generateFor: originAccount.
+	
+	self assert: -10*peso equals: aReport yieldResult.! !
 
-!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 17:13:57'!
+!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/13/2022 12:16:04'!
 test03
 	
-	| originAccount recipientAccount |
+	| originAccount recipientAccount aReport |
 	originAccount _ ReceptiveAccount new.
 	recipientAccount _ ReceptiveAccount new.
 	
 	Transfer amount: 10*peso from: originAccount to: recipientAccount. 
 	
-	self assert: 10*peso equals: recipientAccount netTransferReport.! !
+	aReport _ NetTransferReport generateFor: recipientAccount.
+	
+	self assert: 10*peso equals: aReport yieldResult.! !
 
-!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 17:14:09'!
+!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/13/2022 12:16:15'!
 test04
 	
-	| originAccount recipientAccount |
+	| originAccount recipientAccount aReport |
 	originAccount _ ReceptiveAccount new.
 	recipientAccount _ ReceptiveAccount new.
 	
 	Transfer amount: 10*peso from: originAccount to: recipientAccount.
 	Transfer amount: 10*peso from: originAccount to: recipientAccount. 
 	
-	self assert: -20*peso equals: originAccount netTransferReport.! !
+	aReport _ NetTransferReport generateFor: originAccount.
+	
+	self assert: -20*peso equals: aReport yieldResult.! !
 
-!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 17:20:07'!
+!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/13/2022 12:16:34'!
 test05
 	
-	| originAccount recipientAccount |
+	| originAccount recipientAccount aReport |
 	originAccount _ ReceptiveAccount new.
 	recipientAccount _ ReceptiveAccount new.
 	
@@ -1222,45 +1242,53 @@ test05
 	Transfer amount: 10*peso from: originAccount to: recipientAccount.
 	Deposit register: 100*peso on: originAccount.
 	
-	self assert: -20*peso equals: originAccount netTransferReport.
+	aReport _ NetTransferReport generateFor: originAccount.
+	
+	self assert: -20*peso equals: aReport yieldResult.
 	self assert: 80*peso equals: originAccount balance.! !
 
-!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 17:24:03'!
+!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/13/2022 12:16:58'!
 test06
 	
-	| portfolio |
+	| portfolio aReport |
 	portfolio _ Portfolio new.
 	
-	self assert: 0*peso equals: portfolio netTransferReport.! !
+	aReport _ NetTransferReport generateFor: portfolio.
+	
+	self assert: 0*peso equals: aReport yieldResult.! !
 
-!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 17:24:33'!
+!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/13/2022 12:17:16'!
 test07
 	
-	| originAccount recipientAccount portfolio |
+	| originAccount recipientAccount portfolio aReport |
 	originAccount _ ReceptiveAccount new.
 	recipientAccount _ ReceptiveAccount new.
 	portfolio _ Portfolio with: originAccount.
 	
 	Transfer amount: 10*peso from: originAccount to: recipientAccount.
 	
-	self assert: -10*peso equals: portfolio netTransferReport.! !
+	aReport _ NetTransferReport generateFor: portfolio.
+	
+	self assert: -10*peso equals: aReport yieldResult.! !
 
-!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 17:26:06'!
+!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/13/2022 12:17:34'!
 test08
 	
-	| originAccount recipientAccount portfolio |
+	| originAccount recipientAccount portfolio aReport |
 	originAccount _ ReceptiveAccount new.
 	recipientAccount _ ReceptiveAccount new.
 	portfolio _ Portfolio with: recipientAccount.
 	
 	Transfer amount: 10*peso from: originAccount to: recipientAccount.
 	
-	self assert: 10*peso equals: portfolio netTransferReport.! !
+	aReport _ NetTransferReport generateFor: portfolio.
+	
+	self assert: 10*peso equals: aReport yieldResult.! !
 
-!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 17:30:36'!
+!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/13/2022 12:17:49'!
 test09
 	
-	| originAccount recipientAccount portfolio |
+	| originAccount recipientAccount portfolio aReport |
 	originAccount _ ReceptiveAccount new.
 	recipientAccount _ ReceptiveAccount new.
 	portfolio _ Portfolio with: recipientAccount.
@@ -1268,16 +1296,149 @@ test09
 	Transfer amount: 10*peso from: originAccount to: recipientAccount.
 	Transfer amount: 10*peso from: originAccount to: recipientAccount.
 	
-	self assert: 20*peso equals: portfolio netTransferReport.! !
+	aReport _ NetTransferReport generateFor: portfolio.
+	
+	self assert: 20*peso equals: aReport yieldResult.! !
 
-!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/12/2022 17:35:41'!
+!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/13/2022 12:18:09'!
 test10
 	
-	| originAccount recipientAccount portfolio |
+	| originAccount recipientAccount portfolio aReport |
 	originAccount _ ReceptiveAccount new.
 	recipientAccount _ ReceptiveAccount new.
 	portfolio _ Portfolio with: (Portfolio with: recipientAccount).
 	
 	Transfer amount: 10*peso from: originAccount to: recipientAccount.
+		
+	aReport _ NetTransferReport generateFor: portfolio.
 	
-	self assert: 10*peso equals: portfolio netTransferReport.! !
+	self assert: 10*peso equals: aReport yieldResult.! !
+
+
+!classDefinition: #Report category: 'ServiciosFinancieros-Parte2'!
+Object subclass: #Report
+	instanceVariableNames: 'result'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros-Parte2'!
+
+!Report methodsFor: 'initialization' stamp: 'FG 11/13/2022 12:01:53'!
+initializeWith: anAccount
+
+	self subclassResponsibility.! !
+
+
+!Report methodsFor: 'result' stamp: 'FG 11/13/2022 12:08:24'!
+yieldResult
+	
+	^result.! !
+
+
+!Report methodsFor: 'dd' stamp: 'FG 11/13/2022 12:43:01'!
+processDeposit: aDeposit
+
+	self subclassResponsibility.! !
+
+!Report methodsFor: 'dd' stamp: 'FG 11/13/2022 12:43:35'!
+processTransferDepositLeg: aTransferDepositLeg
+
+	self subclassResponsibility.! !
+
+!Report methodsFor: 'dd' stamp: 'FG 11/13/2022 12:43:20'!
+processTransferWithdrawLeg: aTransferWithdrawLeg
+
+	self subclassResponsibility.! !
+
+!Report methodsFor: 'dd' stamp: 'FG 11/13/2022 12:43:09'!
+processWithdraw: aWithdraw
+
+	self subclassResponsibility.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Report class' category: 'ServiciosFinancieros-Parte2'!
+Report class
+	instanceVariableNames: ''!
+
+!Report class methodsFor: 'instance creation' stamp: 'FG 11/13/2022 12:00:52'!
+generateFor: anAccount
+	
+	^self new initializeWith: anAccount.! !
+
+
+!classDefinition: #AccountSummaryReport category: 'ServiciosFinancieros-Parte2'!
+Report subclass: #AccountSummaryReport
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros-Parte2'!
+
+!AccountSummaryReport methodsFor: 'initialization' stamp: 'FG 11/13/2022 13:00:59'!
+initializeWith: anAccount
+	
+	result _ OrderedCollection new.
+	
+	anAccount transactions do: [ :aTransaction | 
+		result add: (aTransaction processFor: self).
+	].
+	
+	result add: ('Balance = ', anAccount balance asString).! !
+
+
+!AccountSummaryReport methodsFor: 'dd' stamp: 'FG 11/13/2022 12:45:14'!
+processDeposit: aDeposit
+	
+	^'Depósito por ', aDeposit value asString.! !
+
+!AccountSummaryReport methodsFor: 'dd' stamp: 'FG 11/13/2022 12:47:34'!
+processTransferDepositLeg: aTransferDepositLeg
+	
+	^'Entrada por transferencia de ', aTransferDepositLeg value asString.! !
+
+!AccountSummaryReport methodsFor: 'dd' stamp: 'FG 11/13/2022 12:47:23'!
+processTransferWithdrawLeg: aTransferWithdrawLeg
+
+	^'Salida por transferencia de ', aTransferWithdrawLeg value asString.! !
+
+!AccountSummaryReport methodsFor: 'dd' stamp: 'FG 11/13/2022 12:47:10'!
+processWithdraw: aWithdraw
+	
+	^'Extracción por ', aWithdraw value asString.! !
+
+
+!classDefinition: #NetTransferReport category: 'ServiciosFinancieros-Parte2'!
+Report subclass: #NetTransferReport
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros-Parte2'!
+
+!NetTransferReport methodsFor: 'initialization' stamp: 'FG 11/13/2022 12:53:14'!
+initializeWith: anAccount
+
+	result _ 0*peso.
+	
+	anAccount transactions do: [ :transaction |  
+		result _ transaction processFor: self.
+	].! !
+
+
+!NetTransferReport methodsFor: 'dd' stamp: 'FG 11/13/2022 12:50:44'!
+processDeposit: aDeposit
+	
+	^result.! !
+
+!NetTransferReport methodsFor: 'dd' stamp: 'FG 11/13/2022 12:52:59'!
+processTransferDepositLeg: aTransferDepositLeg
+
+	^aTransferDepositLeg affectBalance: result.! !
+
+!NetTransferReport methodsFor: 'dd' stamp: 'FG 11/13/2022 12:52:06'!
+processTransferWithdrawLeg: aTransferWithdrawLeg
+
+	^aTransferWithdrawLeg affectBalance: result.! !
+
+!NetTransferReport methodsFor: 'dd' stamp: 'FG 11/13/2022 12:51:05'!
+processWithdraw: aWithdraw
+	
+	^result.! !
