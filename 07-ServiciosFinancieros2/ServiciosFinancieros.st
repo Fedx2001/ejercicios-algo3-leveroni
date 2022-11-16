@@ -450,16 +450,24 @@ addTransactionsTo: aCollectionOfTransactions
 
 !classDefinition: #Portfolio category: 'ServiciosFinancieros-SolucionExtraParte1Catedra'!
 Account subclass: #Portfolio
-	instanceVariableNames: 'accounts parents'
+	instanceVariableNames: 'accounts parents string name receptiveAccount account anotherAccount_CHANGE_ME'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-SolucionExtraParte1Catedra'!
 
-!Portfolio methodsFor: 'initialization' stamp: 'HAW 5/25/2019 12:03:18'!
+!Portfolio methodsFor: 'initialization' stamp: 'OO 11/16/2022 17:14:26'!
 initialize
 
+	self initializeNamed: '' with: nil with: nil.! !
+
+!Portfolio methodsFor: 'initialization' stamp: 'OO 11/16/2022 17:10:08'!
+initializeNamed: aName with: anAccount with: anotherAccount 
+	
 	accounts := OrderedCollection new.
-	parents := OrderedCollection new.! !
+	parents := OrderedCollection new.
+	name := aName.
+	anAccount ifNotNil: [self add: anAccount].
+	anotherAccount ifNotNil: [self add: anotherAccount].! !
 
 
 !Portfolio methodsFor: 'main protocol' stamp: 'FG 11/11/2022 20:17:07'!
@@ -471,6 +479,10 @@ balance
 hasRegistered: aTransaction
 
 	^accounts anySatisfy: [ :anAccount | anAccount hasRegistered: aTransaction ]! !
+
+!Portfolio methodsFor: 'main protocol' stamp: 'OO 11/16/2022 16:40:18'!
+name
+	^name.! !
 
 !Portfolio methodsFor: 'main protocol' stamp: 'HAW 5/25/2019 11:38:32'!
 transactions
@@ -610,19 +622,40 @@ with: anAccount with: anotherAccount
 		add: anotherAccount;
 		yourself! !
 
+
+!Portfolio class methodsFor: 'instance creation' stamp: 'OO 11/16/2022 17:13:37'!
+named: aName 
+	^self new initializeNamed: aName with: nil with: nil.! !
+
+!Portfolio class methodsFor: 'instance creation' stamp: 'OO 11/16/2022 17:13:18'!
+named: aName with: anAccount 
+	
+	^self new initializeNamed: aName with: anAccount with: nil. ! !
+
+!Portfolio class methodsFor: 'instance creation' stamp: 'OO 11/16/2022 16:55:38'!
+named: aName with: anAccount with: anotherAccount 
+	
+	^self new initializeNamed: aName with: anAccount with: anotherAccount ! !
+
 
 !classDefinition: #ReceptiveAccount category: 'ServiciosFinancieros-SolucionExtraParte1Catedra'!
 Account subclass: #ReceptiveAccount
-	instanceVariableNames: 'transactions'
+	instanceVariableNames: 'transactions name'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-SolucionExtraParte1Catedra'!
 
-!ReceptiveAccount methodsFor: 'initialization' stamp: 'HernanWilkinson 7/13/2011 18:35'!
+!ReceptiveAccount methodsFor: 'initialization' stamp: 'OO 11/16/2022 16:35:30'!
 initialize
 
+	self initializeNamed: ''.! !
+
+!ReceptiveAccount methodsFor: 'initialization' stamp: 'OO 11/16/2022 16:36:42'!
+initializeNamed: aString 
+	
 	super initialize.
-	transactions := OrderedCollection new.! !
+	transactions := OrderedCollection new.
+	name := aString.! !
 
 
 !ReceptiveAccount methodsFor: 'main protocol' stamp: 'FG 11/11/2022 20:16:22'!
@@ -637,6 +670,11 @@ hasRegistered: aTransaction
 
 	^ transactions includes: aTransaction 
 ! !
+
+!ReceptiveAccount methodsFor: 'main protocol' stamp: 'OO 11/16/2022 16:36:58'!
+name
+
+	^name copy.! !
 
 !ReceptiveAccount methodsFor: 'main protocol' stamp: 'HernanWilkinson 7/13/2011 18:37'!
 register: aTransaction
@@ -665,6 +703,16 @@ addedTo: aPortfolio
 isComposedBy: anAccount
 
 	^self = anAccount ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'ReceptiveAccount class' category: 'ServiciosFinancieros-SolucionExtraParte1Catedra'!
+ReceptiveAccount class
+	instanceVariableNames: ''!
+
+!ReceptiveAccount class methodsFor: 'instance creation' stamp: 'OO 11/16/2022 16:34:01'!
+named: aString 
+	^self new initializeNamed: aString ! !
 
 
 !classDefinition: #AccountTransaction category: 'ServiciosFinancieros-SolucionExtraParte1Catedra'!
@@ -1315,6 +1363,103 @@ test10
 	self assert: 10*peso equals: aReport yieldResult.! !
 
 
+!classDefinition: #PortfolioTreePrinterReportTest category: 'ServiciosFinancieros-Parte2'!
+TestCase subclass: #PortfolioTreePrinterReportTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros-Parte2'!
+
+!PortfolioTreePrinterReportTest methodsFor: 'as yet unclassified' stamp: 'OO 11/16/2022 16:33:41'!
+test01
+
+
+	| anAccount |
+	anAccount _ ReceptiveAccount named: 'Cuenta de Juan'.
+	
+	self assert: 'Cuenta de Juan' equals: anAccount name.! !
+
+!PortfolioTreePrinterReportTest methodsFor: 'as yet unclassified' stamp: 'OO 11/16/2022 16:37:26'!
+test02
+
+
+	| anAccount |
+	anAccount _ ReceptiveAccount named: 'Cuenta de Angeles'.
+	
+	self assert: 'Cuenta de Angeles' equals: anAccount name.! !
+
+!PortfolioTreePrinterReportTest methodsFor: 'as yet unclassified' stamp: 'OO 11/16/2022 16:38:26'!
+test03
+
+
+	| aPortfolio |
+	aPortfolio _ Portfolio named: 'Portfolio de hijos'.
+	
+	self assert: 'Portfolio de hijos' equals: aPortfolio name.! !
+
+!PortfolioTreePrinterReportTest methodsFor: 'as yet unclassified' stamp: 'OO 11/16/2022 16:51:28'!
+test04
+
+
+	| aPortfolio anAccount |
+	anAccount _ ReceptiveAccount named: 'Cuenta de Juan'.
+	aPortfolio _ Portfolio named: 'Portfolio de la Familia' with: anAccount.
+	
+	self assert: 'Portfolio de la Familia' equals: aPortfolio name.
+	self assert: (aPortfolio accountsIncludes: anAccount).! !
+
+!PortfolioTreePrinterReportTest methodsFor: 'as yet unclassified' stamp: 'OO 11/16/2022 17:01:50'!
+test05
+
+	| aPortfolio anAccount aFatherPortfolio |
+	anAccount _ ReceptiveAccount named: 'Cuenta de Juan'.
+	aPortfolio _ Portfolio named: 'Portfolio de hijos'.
+	aFatherPortfolio _ Portfolio named: 'Portfolio de la Familia' with: anAccount with: aPortfolio.
+	
+		
+	self assert: 'Portfolio de hijos' equals: aPortfolio name.
+	self assert: (aFatherPortfolio accountsIncludes: anAccount).
+	self assert: (aFatherPortfolio accountsIncludes: aPortfolio).! !
+
+!PortfolioTreePrinterReportTest methodsFor: 'as yet unclassified' stamp: 'OO 11/16/2022 17:05:32'!
+test06
+	| anAccount |
+	anAccount _ ReceptiveAccount new.
+	self assert:  '' equals: anAccount name.
+	! !
+
+!PortfolioTreePrinterReportTest methodsFor: 'as yet unclassified' stamp: 'OO 11/16/2022 17:05:56'!
+test07
+	| aPortfolio |
+	aPortfolio _ Portfolio new.
+	self assert:  '' equals: aPortfolio name.
+	! !
+
+!PortfolioTreePrinterReportTest methodsFor: 'as yet unclassified' stamp: 'OO 11/16/2022 17:21:37'!
+test08
+
+
+	| aPortfolio aReport |
+	
+	aPortfolio _ Portfolio new.		
+	aReport _ PortfolioTreePrinter generateFor: aPortfolio.
+
+	self assert: '' equals: aReport yieldResult.
+	! !
+
+!PortfolioTreePrinterReportTest methodsFor: 'as yet unclassified' stamp: 'OO 11/16/2022 17:25:38'!
+test09
+
+
+	| aPortfolio aReport anAccount  |
+	anAccount _ ReceptiveAccount named: 'Cuenta de Juan'.
+	aPortfolio _ Portfolio named: 'Portfolio de la Familia' with: anAccount.		
+	aReport _ PortfolioTreePrinter generateFor: aPortfolio.
+
+	self assert: {'Portfolio de la Familia'. '   CuentaDeJuan'.} equals: aReport yieldResult.
+	! !
+
+
 !classDefinition: #Report category: 'ServiciosFinancieros-Parte2'!
 Object subclass: #Report
 	instanceVariableNames: 'result'
@@ -1328,7 +1473,7 @@ initializeWith: anAccount
 	self subclassResponsibility.! !
 
 
-!Report methodsFor: 'result' stamp: 'FG 11/13/2022 12:08:24'!
+!Report methodsFor: 'result' stamp: 'OO 11/16/2022 17:21:51'!
 yieldResult
 	
 	^result.! !
@@ -1442,3 +1587,16 @@ processTransferWithdrawLeg: aTransferWithdrawLeg
 processWithdraw: aWithdraw
 	
 	^result.! !
+
+
+!classDefinition: #PortfolioTreePrinter category: 'ServiciosFinancieros-Parte2'!
+Report subclass: #PortfolioTreePrinter
+	instanceVariableNames: 'account'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros-Parte2'!
+
+!PortfolioTreePrinter methodsFor: 'initialization' stamp: 'OO 11/16/2022 17:23:23'!
+initializeWith: anAccount 
+	
+	result _ anAccount name.! !
