@@ -447,6 +447,11 @@ addTransactionsTo: aCollectionOfTransactions
 
 	self subclassResponsibility ! !
 
+!Account methodsFor: 'private' stamp: 'OO 11/17/2022 15:18:09'!
+processFor: aReport
+
+	self subclassResponsibility.! !
+
 
 !classDefinition: #Portfolio category: 'ServiciosFinancieros-SolucionExtraParte1Catedra'!
 Account subclass: #Portfolio
@@ -520,10 +525,19 @@ add: accountToAdd
 	! !
 
 
+!Portfolio methodsFor: 'private' stamp: 'OO 11/17/2022 15:14:33'!
+accounts
+	^accounts copy.! !
+
 !Portfolio methodsFor: 'private' stamp: 'HAW 5/25/2019 11:42:55'!
 addTransactionsTo: aCollectionOfTransactions
 
 	accounts do: [ :anAccount | anAccount addTransactionsTo: aCollectionOfTransactions ]! !
+
+!Portfolio methodsFor: 'private' stamp: 'OO 11/17/2022 15:09:43'!
+processFor: aReport
+	^aReport processPortfolio: self.
+	! !
 
 
 !Portfolio methodsFor: 'composition' stamp: 'HAW 5/25/2019 12:17:31'!
@@ -568,33 +582,6 @@ rootParents
 signalCanNotAddAccount
 	
 	self error: self class canNotAddAccountErrorMessage! !
-
-
-!Portfolio methodsFor: 'reportes' stamp: 'FG 11/12/2022 12:47:21'!
-accountSummary
-	
-	| report |
-	report _ OrderedCollection new.
-	
-	accounts do: [ :anAccount | 
-		report addAll: (anAccount accountSummary allButLast)
-	].
-	
-	report add: 'Balance = ', self balance asString.
-	
-	^report.! !
-
-!Portfolio methodsFor: 'reportes' stamp: 'FG 11/12/2022 17:33:10'!
-netTransferReport
-	
-	| total |
-	total _ 0*peso.
-	
-	accounts isEmpty ifTrue: [^0*peso.].
-	
-	accounts do: [ :anAccount | total _ total + anAccount netTransferReport ].
-	
-	^total.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -692,6 +679,11 @@ transactions
 addTransactionsTo: aCollectionOfTransactions
 
 	aCollectionOfTransactions addAll: transactions ! !
+
+!ReceptiveAccount methodsFor: 'private' stamp: 'OO 11/17/2022 15:10:22'!
+processFor: aReport 
+	^aReport processReceptiveAccount: self.
+	! !
 
 
 !ReceptiveAccount methodsFor: 'composition' stamp: 'HAW 5/25/2019 12:03:32'!
@@ -1363,6 +1355,193 @@ test10
 	self assert: 10*peso equals: aReport yieldResult.! !
 
 
+!classDefinition: #PortfolioDetailedTreePrinterTest category: 'ServiciosFinancieros-Parte2'!
+TestCase subclass: #PortfolioDetailedTreePrinterTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros-Parte2'!
+
+!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'OO 11/17/2022 16:04:28'!
+test01
+
+
+	| aPortfolio aReport expectedResult |
+	
+	aPortfolio _ Portfolio named: ''.		
+	aReport _ PortfolioDetailedTreePrinter generateFor: aPortfolio.
+	
+	expectedResult _(OrderedCollection with: '' with: '   Balance = 0 * pesos').
+	self assert: expectedResult equals: aReport yieldResult.
+	! !
+
+!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'OO 11/17/2022 16:04:34'!
+test02
+
+
+	| aPortfolio aReport expectedResult |
+	
+	aPortfolio _ Portfolio named: 'Portfolio de Ana Gutson'.		
+	aReport _ PortfolioDetailedTreePrinter generateFor: aPortfolio.
+
+	expectedResult _ OrderedCollection new.
+	expectedResult add: 'Portfolio de Ana Gutson'.
+	expectedResult add:  '   Balance = 0 * pesos'.
+	
+	self assert: expectedResult equals: aReport yieldResult.
+	! !
+
+!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'OO 11/17/2022 16:04:39'!
+test03
+
+
+	| aPortfolio aReport expectedResult anAccount |
+	
+	anAccount _ ReceptiveAccount named: 'Cuenta de Ana Gutson'.
+	aPortfolio _ Portfolio named: 'Portfolio de Ana Gutson' with: anAccount.		
+	aReport _ PortfolioDetailedTreePrinter generateFor: aPortfolio.
+
+	expectedResult _(OrderedCollection new).
+	expectedResult add: 'Portfolio de Ana Gutson'.
+	expectedResult add: '   Cuenta de Ana Gutson'.
+	expectedResult add: '      Balance = 0 * pesos'.
+	expectedResult add:  '   Balance = 0 * pesos'.
+	
+	self assert: expectedResult equals: aReport yieldResult.
+	! !
+
+!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'OO 11/17/2022 16:05:02'!
+test04
+
+
+	| aPortfolio aReport expectedResult anAccount anAccount2 |
+	anAccount2 _ ReceptiveAccount named: 'Cuenta de Joaquin Singer'.
+	anAccount _ ReceptiveAccount named: 'Cuenta de Ana Gutson'.
+	aPortfolio _ Portfolio named: 'Portfolio de Ana Gutson' with: anAccount with: anAccount2.		
+	aReport _ PortfolioDetailedTreePrinter generateFor: aPortfolio.
+
+	expectedResult _(OrderedCollection new).
+	expectedResult add: 'Portfolio de Ana Gutson'.
+	expectedResult add: '   Cuenta de Ana Gutson'.
+	expectedResult add: '      Balance = 0 * pesos'.
+	expectedResult add: '   Cuenta de Joaquin Singer'.
+	expectedResult add: '      Balance = 0 * pesos'.
+	expectedResult add:  '   Balance = 0 * pesos'.
+	
+	self assert: expectedResult equals: aReport yieldResult.
+	! !
+
+!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'OO 11/17/2022 16:04:13'!
+test05
+
+
+	| aPortfolio aReport expectedResult anAccount |
+	anAccount _ ReceptiveAccount named: 'Cuenta de Ana Gutson'.
+	aPortfolio _ Portfolio named: 'Portfolio de Ana Gutson' with: anAccount.		
+	
+	Deposit register: 100000000*peso on: anAccount.
+	
+	aReport _ PortfolioDetailedTreePrinter generateFor: aPortfolio.
+
+	expectedResult _(OrderedCollection new).
+	expectedResult add: 'Portfolio de Ana Gutson'.
+	expectedResult add: '   Cuenta de Ana Gutson'.
+	expectedResult add: '      Depósito por 100000000 * pesos'.
+	expectedResult add: '      Balance = 100000000 * pesos'.
+	expectedResult add: '   Balance = 100000000 * pesos'.
+	
+	self assert: expectedResult equals: aReport yieldResult.
+	! !
+
+!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'OO 11/17/2022 16:16:45'!
+test06
+
+
+	| aPortfolio aReport expectedResult anAccount |
+	anAccount _ ReceptiveAccount named: 'Cuenta de Ana Gutson'.
+	aPortfolio _ Portfolio named: 'Portfolio de Ana Gutson' with: anAccount.		
+
+	Deposit register: 100000000*peso on: anAccount.
+	Withdraw register: 100000000*peso on: anAccount.	
+	
+	aReport _ PortfolioDetailedTreePrinter generateFor: aPortfolio.
+
+	expectedResult _(OrderedCollection new).
+	expectedResult add: 'Portfolio de Ana Gutson'.
+	expectedResult add: '   Cuenta de Ana Gutson'.
+	expectedResult add: '      Depósito por 100000000 * pesos'.
+	expectedResult add: '      Extracción por 100000000 * pesos'.
+	expectedResult add: '      Balance = 0 * pesos'.
+	expectedResult add: '   Balance = 0 * pesos'.
+	
+	self assert: expectedResult equals: aReport yieldResult.
+	! !
+
+!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'OO 11/17/2022 16:18:57'!
+test07
+
+
+	| aPortfolio aReport expectedResult anAccount |
+	anAccount _ ReceptiveAccount named: 'Cuenta de Ana Gutson'.
+	aPortfolio _ Portfolio named: 'Portfolio de Ana Gutson' with: anAccount.		
+	
+	
+	Deposit register: 100000000*peso on: anAccount.
+	Transfer amount: 100000000*peso from: anAccount to: ReceptiveAccount new.
+	
+	aReport _ PortfolioDetailedTreePrinter generateFor: aPortfolio.
+
+	expectedResult _(OrderedCollection new).
+	expectedResult add: 'Portfolio de Ana Gutson'.
+	expectedResult add: '   Cuenta de Ana Gutson'.
+	expectedResult add: '      Depósito por 100000000 * pesos'.
+	expectedResult add: '      Salida por transferencia de 100000000 * pesos'.
+	expectedResult add: '      Balance = 0 * pesos'.
+	expectedResult add: '   Balance = 0 * pesos'.
+	
+	self assert: expectedResult equals: aReport yieldResult.
+	! !
+
+!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'OO 11/17/2022 16:24:13'!
+test08
+
+	| aPortfolio aReport expectedResult aFatherPortfolio |
+	
+	aPortfolio _ Portfolio named: 'Portfolio de Ana Gutson'.		
+	aFatherPortfolio _ Portfolio named: 'Portfolio de Ayudantes de Algoritmos 3' with: aPortfolio.
+	aReport _ PortfolioDetailedTreePrinter generateFor: aFatherPortfolio.
+
+	expectedResult _ OrderedCollection new.
+	expectedResult add: 'Portfolio de Ayudantes de Algoritmos 3'.
+	expectedResult add: '   Portfolio de Ana Gutson'.
+	expectedResult add:  '      Balance = 0 * pesos'.
+	expectedResult add:  '   Balance = 0 * pesos'.
+	
+	self assert: expectedResult equals: aReport yieldResult.
+	! !
+
+!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'OO 11/17/2022 16:25:47'!
+test09
+
+	| aPortfolio aReport expectedResult aFatherPortfolio anAccount |
+	
+	anAccount _ ReceptiveAccount named: 'Cuenta de Ana Gutson'.
+	aPortfolio _ Portfolio named: 'Portfolio de Ana Gutson' with: anAccount.		
+	aFatherPortfolio _ Portfolio named: 'Portfolio de Ayudantes de Algoritmos 3' with: aPortfolio.
+	aReport _ PortfolioDetailedTreePrinter generateFor: aFatherPortfolio.
+
+	expectedResult _ OrderedCollection new.
+	expectedResult add: 'Portfolio de Ayudantes de Algoritmos 3'.
+	expectedResult add: '   Portfolio de Ana Gutson'.
+	expectedResult add: '      Cuenta de Ana Gutson'.
+	expectedResult add:  '         Balance = 0 * pesos'.
+	expectedResult add:  '      Balance = 0 * pesos'.
+	expectedResult add:  '   Balance = 0 * pesos'.
+	
+	self assert: expectedResult equals: aReport yieldResult.
+	! !
+
+
 !classDefinition: #PortfolioTreePrinterReportTest category: 'ServiciosFinancieros-Parte2'!
 TestCase subclass: #PortfolioTreePrinterReportTest
 	instanceVariableNames: ''
@@ -1370,7 +1549,7 @@ TestCase subclass: #PortfolioTreePrinterReportTest
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Parte2'!
 
-!PortfolioTreePrinterReportTest methodsFor: 'as yet unclassified' stamp: 'OO 11/16/2022 16:33:41'!
+!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/16/2022 16:33:41'!
 test01
 
 
@@ -1379,7 +1558,7 @@ test01
 	
 	self assert: 'Cuenta de Juan' equals: anAccount name.! !
 
-!PortfolioTreePrinterReportTest methodsFor: 'as yet unclassified' stamp: 'OO 11/16/2022 16:37:26'!
+!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/16/2022 16:37:26'!
 test02
 
 
@@ -1388,7 +1567,7 @@ test02
 	
 	self assert: 'Cuenta de Angeles' equals: anAccount name.! !
 
-!PortfolioTreePrinterReportTest methodsFor: 'as yet unclassified' stamp: 'OO 11/16/2022 16:38:26'!
+!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/16/2022 16:38:26'!
 test03
 
 
@@ -1397,7 +1576,7 @@ test03
 	
 	self assert: 'Portfolio de hijos' equals: aPortfolio name.! !
 
-!PortfolioTreePrinterReportTest methodsFor: 'as yet unclassified' stamp: 'OO 11/16/2022 16:51:28'!
+!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/16/2022 16:51:28'!
 test04
 
 
@@ -1408,7 +1587,7 @@ test04
 	self assert: 'Portfolio de la Familia' equals: aPortfolio name.
 	self assert: (aPortfolio accountsIncludes: anAccount).! !
 
-!PortfolioTreePrinterReportTest methodsFor: 'as yet unclassified' stamp: 'OO 11/16/2022 17:01:50'!
+!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/16/2022 17:01:50'!
 test05
 
 	| aPortfolio anAccount aFatherPortfolio |
@@ -1421,21 +1600,21 @@ test05
 	self assert: (aFatherPortfolio accountsIncludes: anAccount).
 	self assert: (aFatherPortfolio accountsIncludes: aPortfolio).! !
 
-!PortfolioTreePrinterReportTest methodsFor: 'as yet unclassified' stamp: 'OO 11/16/2022 17:05:32'!
+!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/16/2022 17:05:32'!
 test06
 	| anAccount |
 	anAccount _ ReceptiveAccount new.
 	self assert:  '' equals: anAccount name.
 	! !
 
-!PortfolioTreePrinterReportTest methodsFor: 'as yet unclassified' stamp: 'OO 11/16/2022 17:05:56'!
+!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/16/2022 17:05:56'!
 test07
 	| aPortfolio |
 	aPortfolio _ Portfolio new.
 	self assert:  '' equals: aPortfolio name.
 	! !
 
-!PortfolioTreePrinterReportTest methodsFor: 'as yet unclassified' stamp: 'OO 11/16/2022 17:21:37'!
+!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/17/2022 13:50:22'!
 test08
 
 
@@ -1444,19 +1623,84 @@ test08
 	aPortfolio _ Portfolio new.		
 	aReport _ PortfolioTreePrinter generateFor: aPortfolio.
 
-	self assert: '' equals: aReport yieldResult.
+	self assert: (OrderedCollection with: '') equals: aReport yieldResult.
 	! !
 
-!PortfolioTreePrinterReportTest methodsFor: 'as yet unclassified' stamp: 'OO 11/16/2022 17:25:38'!
+!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/17/2022 13:50:37'!
 test09
 
 
-	| aPortfolio aReport anAccount  |
+	| aPortfolio aReport |
+	
+	aPortfolio _ Portfolio named: 'Portfolio de la Familia'.		
+	aReport _ PortfolioTreePrinter generateFor: aPortfolio.
+
+	self assert: (OrderedCollection with: 'Portfolio de la Familia') equals: aReport yieldResult.
+	! !
+
+!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/17/2022 14:06:43'!
+test10
+
+	| aPortfolio aReport anAccount  expectedResult |
 	anAccount _ ReceptiveAccount named: 'Cuenta de Juan'.
 	aPortfolio _ Portfolio named: 'Portfolio de la Familia' with: anAccount.		
 	aReport _ PortfolioTreePrinter generateFor: aPortfolio.
+	
+	expectedResult _ (OrderedCollection with: 'Portfolio de la Familia').
+ 	expectedResult add: '   Cuenta de Juan'.
+	
+	self assert:  expectedResult equals: aReport yieldResult.
+	! !
 
-	self assert: {'Portfolio de la Familia'. '   CuentaDeJuan'.} equals: aReport yieldResult.
+!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/17/2022 14:11:16'!
+test11
+
+	| aPortfolio aReport anAccount  expectedResult anAccount2 |
+	anAccount _ ReceptiveAccount named: 'Cuenta de Juan'.
+	anAccount2 _ ReceptiveAccount named: 'Cuenta de Angeles'.
+	aPortfolio _ Portfolio named: 'Portfolio de la Familia' with: anAccount with: anAccount2.		
+	
+	aReport _ PortfolioTreePrinter generateFor: aPortfolio.
+	
+	expectedResult _ (OrderedCollection with: 'Portfolio de la Familia').
+ 	expectedResult add: '   Cuenta de Juan'.
+ 	expectedResult add: '   Cuenta de Angeles'.	
+	
+	
+	self assert:  expectedResult equals: aReport yieldResult.
+	! !
+
+!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/17/2022 15:02:11'!
+test12
+
+	| aPortfolio aReport anAccount  expectedResult aFatherPortfolio |
+	
+	anAccount _ ReceptiveAccount named: 'Cuenta de Juan'.
+	aPortfolio _ Portfolio named: 'Portfolio de Hijos' with: anAccount.			
+	aFatherPortfolio _ Portfolio named: 'Portfolio de la Familia' with: aPortfolio.		
+	
+	aReport _ PortfolioTreePrinter generateFor: aFatherPortfolio.
+	
+	expectedResult _ (OrderedCollection with: 'Portfolio de la Familia').
+ 	expectedResult add: '   Portfolio de Hijos'.
+ 	expectedResult add: '      Cuenta de Juan'.	
+	
+	self assert:  expectedResult equals: aReport yieldResult.
+	! !
+
+!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/17/2022 15:25:37'!
+test13
+
+	| aReport anAccount  |
+	
+	anAccount _ ReceptiveAccount named: 'Cuenta de Juan'.
+	
+	self should: [aReport _ PortfolioTreePrinter generateFor: anAccount]  
+		raise: Error  
+		withExceptionDo: [:anError | 
+				self assert: anError messageText 
+				equals: PortfolioTreePrinter cannotCreateReportForReceptiveAccountErrorMessage].
+	
 	! !
 
 
@@ -1589,6 +1833,49 @@ processWithdraw: aWithdraw
 	^result.! !
 
 
+!classDefinition: #PortfolioDetailedTreePrinter category: 'ServiciosFinancieros-Parte2'!
+Report subclass: #PortfolioDetailedTreePrinter
+	instanceVariableNames: 'account'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros-Parte2'!
+
+!PortfolioDetailedTreePrinter methodsFor: 'initialization' stamp: 'OO 11/17/2022 16:47:00'!
+initializeWith: aPortfolio 
+	
+	result _ aPortfolio processFor: self.
+! !
+
+
+!PortfolioDetailedTreePrinter methodsFor: 'dd' stamp: 'OO 11/17/2022 17:07:10'!
+processPortfolio: aPortfolio 
+	
+	|namesAndTransactions indentedNamesAndTransactions |
+	
+	namesAndTransactions _ OrderedCollection new.
+	indentedNamesAndTransactions _ OrderedCollection new.
+	
+	aPortfolio accounts do: [:anAccount | 
+		namesAndTransactions addAll: (anAccount processFor: self).
+		].
+	
+	namesAndTransactions  do: [:aName | indentedNamesAndTransactions add: '   ',aName].
+	indentedNamesAndTransactions addFirst: aPortfolio name.
+	indentedNamesAndTransactions add: '   Balance = ', aPortfolio balance asString.
+	
+	^indentedNamesAndTransactions.
+	
+! !
+
+!PortfolioDetailedTreePrinter methodsFor: 'dd' stamp: 'OO 11/17/2022 17:10:47'!
+processReceptiveAccount: aReceptiveAccount 
+	
+	|tempOrderedCollection|
+	tempOrderedCollection _ OrderedCollection with: aReceptiveAccount name.
+	(AccountSummaryReport generateFor: aReceptiveAccount) yieldResult do: [:aName | tempOrderedCollection add: '   ',aName].
+	^tempOrderedCollection.! !
+
+
 !classDefinition: #PortfolioTreePrinter category: 'ServiciosFinancieros-Parte2'!
 Report subclass: #PortfolioTreePrinter
 	instanceVariableNames: 'account'
@@ -1596,7 +1883,52 @@ Report subclass: #PortfolioTreePrinter
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Parte2'!
 
-!PortfolioTreePrinter methodsFor: 'initialization' stamp: 'OO 11/16/2022 17:23:23'!
-initializeWith: anAccount 
+!PortfolioTreePrinter methodsFor: 'initialization' stamp: 'OO 11/17/2022 15:05:53'!
+initializeWith: aPortfolio
+	result _ aPortfolio processFor: self.
 	
-	result _ anAccount name.! !
+	
+	
+	! !
+
+
+!PortfolioTreePrinter methodsFor: 'dd' stamp: 'OO 11/17/2022 17:08:15'!
+processPortfolio: aPortfolio
+	|accountNames indentedAccountsNames |
+
+	accountNames _ OrderedCollection new.
+	indentedAccountsNames _ OrderedCollection new.
+	
+	aPortfolio accounts do:[ :anAccount |
+		accountNames addAll: (anAccount processFor: self) ].
+	
+	accountNames  do: [:aName | indentedAccountsNames add: '   ',aName].
+	indentedAccountsNames addFirst: aPortfolio name.
+	
+	^indentedAccountsNames.
+	
+	! !
+
+!PortfolioTreePrinter methodsFor: 'dd' stamp: 'OO 11/17/2022 15:16:21'!
+processReceptiveAccount: anAccount
+
+	^OrderedCollection with: anAccount name.
+	! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'PortfolioTreePrinter class' category: 'ServiciosFinancieros-Parte2'!
+PortfolioTreePrinter class
+	instanceVariableNames: ''!
+
+!PortfolioTreePrinter class methodsFor: 'Errors' stamp: 'OO 11/17/2022 15:27:08'!
+cannotCreateReportForReceptiveAccountErrorMessage
+	^'Can not create this report for a Receptive Account'.! !
+
+
+!PortfolioTreePrinter class methodsFor: 'instance creation' stamp: 'OO 11/17/2022 15:30:08'!
+generateFor: anAccount
+	
+	(anAccount isKindOf: Portfolio) ifTrue: [^self new initializeWith: anAccount.].
+	
+	self error: self cannotCreateReportForReceptiveAccountErrorMessage.! !
