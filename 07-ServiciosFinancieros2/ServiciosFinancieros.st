@@ -425,6 +425,11 @@ hasRegistered: aTransaction
 
 	self subclassResponsibility ! !
 
+!Account methodsFor: 'main protocol' stamp: 'OO 11/17/2022 23:20:27'!
+iterateElementsForReport: aReport
+
+	self subclassResponsibility ! !
+
 !Account methodsFor: 'main protocol' stamp: 'HAW 5/25/2019 12:23:15'!
 transactions
 
@@ -442,20 +447,20 @@ isComposedBy: anAccount
 	self subclassResponsibility! !
 
 
+!Account methodsFor: 'private' stamp: 'OO 11/18/2022 00:26:04'!
+accept: aReport
+
+	self subclassResponsibility.! !
+
 !Account methodsFor: 'private' stamp: 'HAW 5/25/2019 12:23:27'!
 addTransactionsTo: aCollectionOfTransactions
 
 	self subclassResponsibility ! !
 
-!Account methodsFor: 'private' stamp: 'OO 11/17/2022 15:18:09'!
-processFor: aReport
-
-	self subclassResponsibility.! !
-
 
 !classDefinition: #Portfolio category: 'ServiciosFinancieros-SolucionExtraParte1Catedra'!
 Account subclass: #Portfolio
-	instanceVariableNames: 'accounts parents string name receptiveAccount account anotherAccount_CHANGE_ME'
+	instanceVariableNames: 'accounts parents name'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-SolucionExtraParte1Catedra'!
@@ -484,6 +489,11 @@ balance
 hasRegistered: aTransaction
 
 	^accounts anySatisfy: [ :anAccount | anAccount hasRegistered: aTransaction ]! !
+
+!Portfolio methodsFor: 'main protocol' stamp: 'OO 11/18/2022 00:26:05'!
+iterateElementsForReport: aReport
+
+	accounts do: [:anAccount | (anAccount accept: aReport)].! !
 
 !Portfolio methodsFor: 'main protocol' stamp: 'OO 11/16/2022 16:40:18'!
 name
@@ -525,6 +535,11 @@ add: accountToAdd
 	! !
 
 
+!Portfolio methodsFor: 'private' stamp: 'OO 11/18/2022 00:26:04'!
+accept: aReport
+	^aReport processPortfolio: self.
+	! !
+
 !Portfolio methodsFor: 'private' stamp: 'OO 11/17/2022 15:14:33'!
 accounts
 	^accounts copy.! !
@@ -533,11 +548,6 @@ accounts
 addTransactionsTo: aCollectionOfTransactions
 
 	accounts do: [ :anAccount | anAccount addTransactionsTo: aCollectionOfTransactions ]! !
-
-!Portfolio methodsFor: 'private' stamp: 'OO 11/17/2022 15:09:43'!
-processFor: aReport
-	^aReport processPortfolio: self.
-	! !
 
 
 !Portfolio methodsFor: 'composition' stamp: 'HAW 5/25/2019 12:17:31'!
@@ -658,6 +668,11 @@ hasRegistered: aTransaction
 	^ transactions includes: aTransaction 
 ! !
 
+!ReceptiveAccount methodsFor: 'main protocol' stamp: 'OO 11/18/2022 00:26:05'!
+iterateElementsForReport: aReport
+
+	transactions do: [:aTransaction | (aTransaction accept: aReport)].! !
+
 !ReceptiveAccount methodsFor: 'main protocol' stamp: 'OO 11/16/2022 16:36:58'!
 name
 
@@ -675,15 +690,15 @@ transactions
 	^ transactions copy! !
 
 
+!ReceptiveAccount methodsFor: 'private' stamp: 'OO 11/18/2022 00:26:04'!
+accept: aReport 
+	^aReport processReceptiveAccount: self.
+	! !
+
 !ReceptiveAccount methodsFor: 'private' stamp: 'HAW 5/25/2019 11:38:52'!
 addTransactionsTo: aCollectionOfTransactions
 
 	aCollectionOfTransactions addAll: transactions ! !
-
-!ReceptiveAccount methodsFor: 'private' stamp: 'OO 11/17/2022 15:10:22'!
-processFor: aReport 
-	^aReport processReceptiveAccount: self.
-	! !
 
 
 !ReceptiveAccount methodsFor: 'composition' stamp: 'HAW 5/25/2019 12:03:32'!
@@ -726,8 +741,8 @@ affectBalance: aBalance
 	self subclassResponsibility ! !
 
 
-!AccountTransaction methodsFor: 'dd' stamp: 'FG 11/13/2022 12:42:05'!
-processFor: aReport
+!AccountTransaction methodsFor: 'dd' stamp: 'OO 11/18/2022 00:26:04'!
+accept: aReport
 
 	self subclassResponsibility.! !
 
@@ -757,8 +772,8 @@ affectBalance: aBalance
 	^aBalance + value ! !
 
 
-!Deposit methodsFor: 'dd' stamp: 'FG 11/13/2022 12:48:22'!
-processFor: aReport
+!Deposit methodsFor: 'dd' stamp: 'OO 11/18/2022 00:26:04'!
+accept: aReport
 
 	^aReport processDeposit: self.! !
 
@@ -839,8 +854,8 @@ affectBalance: aBalance
 	^aBalance + self value! !
 
 
-!TransferDepositLeg methodsFor: 'dd' stamp: 'FG 11/13/2022 12:48:30'!
-processFor: aReport
+!TransferDepositLeg methodsFor: 'dd' stamp: 'OO 11/18/2022 00:26:04'!
+accept: aReport
 
 	^aReport processTransferDepositLeg: self.! !
 
@@ -864,8 +879,8 @@ affectBalance: aBalance
 	^aBalance - self value! !
 
 
-!TransferWithdrawLeg methodsFor: 'dd' stamp: 'FG 11/13/2022 12:48:35'!
-processFor: aReport
+!TransferWithdrawLeg methodsFor: 'dd' stamp: 'OO 11/18/2022 00:26:05'!
+accept: aReport
 
 	^aReport processTransferWithdrawLeg: self.! !
 
@@ -895,8 +910,8 @@ affectBalance: aBalance
 	^aBalance - value! !
 
 
-!Withdraw methodsFor: 'dd' stamp: 'FG 11/13/2022 12:48:39'!
-processFor: aReport
+!Withdraw methodsFor: 'dd' stamp: 'OO 11/18/2022 00:26:05'!
+accept: aReport
 
 	^aReport processWithdraw: self.! !
 
@@ -1244,8 +1259,8 @@ test02NetTransferReportFromOriginOfTransferAccountWithOnlyOneTransferIsTheExpect
 	
 	self assert: -10*peso equals: aReport yieldResult.! !
 
-!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/13/2022 12:16:04'!
-test03
+!NetTransferReportTest methodsFor: 'tests' stamp: 'OO 11/17/2022 22:35:35'!
+test03NetTransferReportFromRecipientOfTransferAccountWithOnlyOneTransferIsTheExpected
 	
 	| originAccount recipientAccount aReport |
 	originAccount _ ReceptiveAccount new.
@@ -1257,8 +1272,8 @@ test03
 	
 	self assert: 10*peso equals: aReport yieldResult.! !
 
-!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/13/2022 12:16:15'!
-test04
+!NetTransferReportTest methodsFor: 'tests' stamp: 'OO 11/17/2022 22:36:32'!
+test04NetTransferReportFromRecipientOfTransferAccountWithTwoTransfersIsTheExpected
 	
 	| originAccount recipientAccount aReport |
 	originAccount _ ReceptiveAccount new.
@@ -1271,8 +1286,8 @@ test04
 	
 	self assert: -20*peso equals: aReport yieldResult.! !
 
-!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/13/2022 12:16:34'!
-test05
+!NetTransferReportTest methodsFor: 'tests' stamp: 'OO 11/17/2022 22:37:32'!
+test05NetTransferReportIsNotAffectedByOtherTypesOfTransacctions
 	
 	| originAccount recipientAccount aReport |
 	originAccount _ ReceptiveAccount new.
@@ -1287,8 +1302,8 @@ test05
 	self assert: -20*peso equals: aReport yieldResult.
 	self assert: 80*peso equals: originAccount balance.! !
 
-!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/13/2022 12:16:58'!
-test06
+!NetTransferReportTest methodsFor: 'tests' stamp: 'OO 11/17/2022 22:38:57'!
+test06NetTransferReportResultIsCeroPesosForAPortfolioWithNoTransfers
 	
 	| portfolio aReport |
 	portfolio _ Portfolio new.
@@ -1297,8 +1312,8 @@ test06
 	
 	self assert: 0*peso equals: aReport yieldResult.! !
 
-!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/13/2022 12:17:16'!
-test07
+!NetTransferReportTest methodsFor: 'tests' stamp: 'OO 11/17/2022 22:43:02'!
+test07CanGenerateReportForPortfolioWithChildAccountWithARegisteredOriginOfTransfer
 	
 	| originAccount recipientAccount portfolio aReport |
 	originAccount _ ReceptiveAccount new.
@@ -1311,8 +1326,8 @@ test07
 	
 	self assert: -10*peso equals: aReport yieldResult.! !
 
-!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/13/2022 12:17:34'!
-test08
+!NetTransferReportTest methodsFor: 'tests' stamp: 'OO 11/17/2022 22:43:46'!
+test08CanGenerateReportForPortfolioWithChildAccountWithARegisteredEndOfTransfer
 	
 	| originAccount recipientAccount portfolio aReport |
 	originAccount _ ReceptiveAccount new.
@@ -1325,8 +1340,8 @@ test08
 	
 	self assert: 10*peso equals: aReport yieldResult.! !
 
-!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/13/2022 12:17:49'!
-test09
+!NetTransferReportTest methodsFor: 'tests' stamp: 'OO 11/17/2022 22:45:43'!
+test09CanGenerateReportForPortfolioWithChildAccountWithTwoRegisteredEndOfTransfers
 	
 	| originAccount recipientAccount portfolio aReport |
 	originAccount _ ReceptiveAccount new.
@@ -1340,8 +1355,8 @@ test09
 	
 	self assert: 20*peso equals: aReport yieldResult.! !
 
-!NetTransferReportTest methodsFor: 'tests' stamp: 'FG 11/13/2022 12:18:09'!
-test10
+!NetTransferReportTest methodsFor: 'tests' stamp: 'OO 11/17/2022 22:48:32'!
+test10CanGenerateReportForPortfolioWithChilPortfolioThatHasAChildAccountWithOneRegisteredTransfer
 	
 	| originAccount recipientAccount portfolio aReport |
 	originAccount _ ReceptiveAccount new.
@@ -1762,37 +1777,77 @@ Report subclass: #AccountSummaryReport
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Parte2'!
 
-!AccountSummaryReport methodsFor: 'initialization' stamp: 'FG 11/13/2022 13:00:59'!
+!AccountSummaryReport methodsFor: 'initialization' stamp: 'OO 11/18/2022 00:19:26'!
 initializeWith: anAccount
 	
 	result _ OrderedCollection new.
-	
-	anAccount transactions do: [ :aTransaction | 
-		result add: (aTransaction processFor: self).
-	].
-	
-	result add: ('Balance = ', anAccount balance asString).! !
+	self registerInResultTheTransactionsStringsOf: anAccount.
+	! !
 
 
-!AccountSummaryReport methodsFor: 'dd' stamp: 'FG 11/13/2022 12:45:14'!
+!AccountSummaryReport methodsFor: 'private' stamp: 'OO 11/18/2022 00:20:55'!
+parsedDepositStringFor: aDeposit
+
+	^ 'Depósito por ' , (aDeposit value asString)! !
+
+!AccountSummaryReport methodsFor: 'private' stamp: 'OO 11/17/2022 21:46:12'!
+parsedStringForBalanceOf: anAccount
+
+	^ 'Balance = ', anAccount balance asString! !
+
+!AccountSummaryReport methodsFor: 'private' stamp: 'OO 11/18/2022 00:21:41'!
+parsedTransferDepositLegStringFor: aTransferDepositLeg
+
+	^ 'Entrada por transferencia de ' , (aTransferDepositLeg value asString)! !
+
+!AccountSummaryReport methodsFor: 'private' stamp: 'OO 11/18/2022 00:22:26'!
+parsedTransferWithdrawLegStringFor: aTransferWithdrawLeg
+
+	^ 'Salida por transferencia de ' , (aTransferWithdrawLeg value asString)! !
+
+!AccountSummaryReport methodsFor: 'private' stamp: 'OO 11/18/2022 00:22:59'!
+parsedWithdrawStringFor: aWithdraw
+
+	^ 'Extracción por ' , (aWithdraw value asString)! !
+
+!AccountSummaryReport methodsFor: 'private' stamp: 'OO 11/18/2022 00:19:31'!
+registerInResultTheTransactionsStringsOf: anAccount
+		
+	anAccount iterateElementsForReport: self.
+	result add: (self parsedStringForBalanceOf: anAccount).
+
+	! !
+
+
+!AccountSummaryReport methodsFor: 'dd' stamp: 'OO 11/18/2022 00:20:55'!
 processDeposit: aDeposit
 	
-	^'Depósito por ', aDeposit value asString.! !
+	result add: (self parsedDepositStringFor: aDeposit).! !
 
-!AccountSummaryReport methodsFor: 'dd' stamp: 'FG 11/13/2022 12:47:34'!
+!AccountSummaryReport methodsFor: 'dd' stamp: 'OO 11/17/2022 23:24:56'!
+processPortfolio: aPortfolio
+	
+	^aPortfolio iterateElementsForReport: self.! !
+
+!AccountSummaryReport methodsFor: 'dd' stamp: 'OO 11/17/2022 23:25:32'!
+processReceptiveAccount: aReceptiveAccount
+	
+	^aReceptiveAccount iterateElementsForReport: self.! !
+
+!AccountSummaryReport methodsFor: 'dd' stamp: 'OO 11/18/2022 00:21:42'!
 processTransferDepositLeg: aTransferDepositLeg
 	
-	^'Entrada por transferencia de ', aTransferDepositLeg value asString.! !
+	result add: (self parsedTransferDepositLegStringFor: aTransferDepositLeg).! !
 
-!AccountSummaryReport methodsFor: 'dd' stamp: 'FG 11/13/2022 12:47:23'!
+!AccountSummaryReport methodsFor: 'dd' stamp: 'OO 11/18/2022 00:22:26'!
 processTransferWithdrawLeg: aTransferWithdrawLeg
 
-	^'Salida por transferencia de ', aTransferWithdrawLeg value asString.! !
+	result add: (self parsedTransferWithdrawLegStringFor: aTransferWithdrawLeg).! !
 
-!AccountSummaryReport methodsFor: 'dd' stamp: 'FG 11/13/2022 12:47:10'!
+!AccountSummaryReport methodsFor: 'dd' stamp: 'OO 11/18/2022 00:22:59'!
 processWithdraw: aWithdraw
 	
-	^'Extracción por ', aWithdraw value asString.! !
+	result add: (self parsedWithdrawStringFor: aWithdraw).! !
 
 
 !classDefinition: #NetTransferReport category: 'ServiciosFinancieros-Parte2'!
@@ -1802,35 +1857,47 @@ Report subclass: #NetTransferReport
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Parte2'!
 
-!NetTransferReport methodsFor: 'initialization' stamp: 'FG 11/13/2022 12:53:14'!
+!NetTransferReport methodsFor: 'private' stamp: 'OO 11/18/2022 00:15:46'!
+registerInResultTheTransfersValuesOf: anAccount
+
+	anAccount iterateElementsForReport: self.! !
+
+
+!NetTransferReport methodsFor: 'initialization' stamp: 'OO 11/17/2022 21:51:19'!
 initializeWith: anAccount
 
 	result _ 0*peso.
 	
-	anAccount transactions do: [ :transaction |  
-		result _ transaction processFor: self.
-	].! !
+	self registerInResultTheTransfersValuesOf: anAccount.! !
 
 
-!NetTransferReport methodsFor: 'dd' stamp: 'FG 11/13/2022 12:50:44'!
+!NetTransferReport methodsFor: 'dd' stamp: 'OO 11/17/2022 23:27:25'!
 processDeposit: aDeposit
-	
-	^result.! !
+! !
 
-!NetTransferReport methodsFor: 'dd' stamp: 'FG 11/13/2022 12:52:59'!
+!NetTransferReport methodsFor: 'dd' stamp: 'OO 11/17/2022 23:26:44'!
+processPortfolio: aPortfolio
+	
+	^aPortfolio  iterateElementsForReport: self.! !
+
+!NetTransferReport methodsFor: 'dd' stamp: 'OO 11/17/2022 23:26:20'!
+processReceptiveAccount: aReceptiveAccount
+	
+	^aReceptiveAccount  iterateElementsForReport: self.! !
+
+!NetTransferReport methodsFor: 'dd' stamp: 'OO 11/17/2022 23:27:57'!
 processTransferDepositLeg: aTransferDepositLeg
 
-	^aTransferDepositLeg affectBalance: result.! !
+	result _ aTransferDepositLeg affectBalance: result.! !
 
-!NetTransferReport methodsFor: 'dd' stamp: 'FG 11/13/2022 12:52:06'!
+!NetTransferReport methodsFor: 'dd' stamp: 'OO 11/17/2022 23:28:07'!
 processTransferWithdrawLeg: aTransferWithdrawLeg
 
-	^aTransferWithdrawLeg affectBalance: result.! !
+	result _ aTransferWithdrawLeg affectBalance: result.! !
 
-!NetTransferReport methodsFor: 'dd' stamp: 'FG 11/13/2022 12:51:05'!
+!NetTransferReport methodsFor: 'dd' stamp: 'OO 11/17/2022 23:27:10'!
 processWithdraw: aWithdraw
-	
-	^result.! !
+	! !
 
 
 !classDefinition: #PortfolioDetailedTreePrinter category: 'ServiciosFinancieros-Parte2'!
@@ -1840,40 +1907,61 @@ Report subclass: #PortfolioDetailedTreePrinter
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Parte2'!
 
-!PortfolioDetailedTreePrinter methodsFor: 'initialization' stamp: 'OO 11/17/2022 16:47:00'!
+!PortfolioDetailedTreePrinter methodsFor: 'initialization' stamp: 'OO 11/18/2022 00:26:05'!
 initializeWith: aPortfolio 
 	
-	result _ aPortfolio processFor: self.
+	result _ OrderedCollection new.
+	aPortfolio accept: self.
 ! !
 
 
-!PortfolioDetailedTreePrinter methodsFor: 'dd' stamp: 'OO 11/17/2022 17:07:10'!
+!PortfolioDetailedTreePrinter methodsFor: 'private' stamp: 'OO 11/18/2022 00:03:44'!
+accountSummaryReportResultFor: aReceptiveAccount
+
+	^ (AccountSummaryReport generateFor: aReceptiveAccount) yieldResult! !
+
+!PortfolioDetailedTreePrinter methodsFor: 'private' stamp: 'OO 11/18/2022 00:10:44'!
+generateAndAddToResultIndentedStringOfBalanceFrom: aPortfolio
+
+	^ result add: '   Balance = ', aPortfolio balance asString! !
+
+!PortfolioDetailedTreePrinter methodsFor: 'private' stamp: 'OO 11/18/2022 00:12:49'!
+indentAccountSummaryReportResultOf: aReceptiveAccount
+
+	^ (self accountSummaryReportResultFor: aReceptiveAccount) do: [:aName | result add: '   ',aName]! !
+
+!PortfolioDetailedTreePrinter methodsFor: 'private' stamp: 'OO 11/17/2022 23:50:35'!
+indentTemporaryResult 
+	
+	|indentedNamesAndTransactions  |
+
+	indentedNamesAndTransactions _ OrderedCollection new.
+	result  do: [:aName | indentedNamesAndTransactions add: '   ',aName].
+	result := indentedNamesAndTransactions.
+	
+! !
+
+
+!PortfolioDetailedTreePrinter methodsFor: 'dd' stamp: 'OO 11/18/2022 00:10:56'!
 processPortfolio: aPortfolio 
 	
-	|namesAndTransactions indentedNamesAndTransactions |
+	aPortfolio iterateElementsForReport: self.
 	
-	namesAndTransactions _ OrderedCollection new.
-	indentedNamesAndTransactions _ OrderedCollection new.
+	self indentTemporaryResult.
 	
-	aPortfolio accounts do: [:anAccount | 
-		namesAndTransactions addAll: (anAccount processFor: self).
-		].
+	result addFirst: aPortfolio name.
 	
-	namesAndTransactions  do: [:aName | indentedNamesAndTransactions add: '   ',aName].
-	indentedNamesAndTransactions addFirst: aPortfolio name.
-	indentedNamesAndTransactions add: '   Balance = ', aPortfolio balance asString.
+	self generateAndAddToResultIndentedStringOfBalanceFrom: aPortfolio.
 	
-	^indentedNamesAndTransactions.
 	
 ! !
 
-!PortfolioDetailedTreePrinter methodsFor: 'dd' stamp: 'OO 11/17/2022 17:10:47'!
+!PortfolioDetailedTreePrinter methodsFor: 'dd' stamp: 'OO 11/18/2022 00:12:44'!
 processReceptiveAccount: aReceptiveAccount 
 	
-	|tempOrderedCollection|
-	tempOrderedCollection _ OrderedCollection with: aReceptiveAccount name.
-	(AccountSummaryReport generateFor: aReceptiveAccount) yieldResult do: [:aName | tempOrderedCollection add: '   ',aName].
-	^tempOrderedCollection.! !
+	result add: aReceptiveAccount name.
+	
+	self indentAccountSummaryReportResultOf: aReceptiveAccount.! !
 
 
 !classDefinition: #PortfolioTreePrinter category: 'ServiciosFinancieros-Parte2'!
@@ -1883,37 +1971,44 @@ Report subclass: #PortfolioTreePrinter
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Parte2'!
 
-!PortfolioTreePrinter methodsFor: 'initialization' stamp: 'OO 11/17/2022 15:05:53'!
+!PortfolioTreePrinter methodsFor: 'initialization' stamp: 'OO 11/18/2022 00:26:05'!
 initializeWith: aPortfolio
-	result _ aPortfolio processFor: self.
+	result _ OrderedCollection new.
+	aPortfolio accept: self.
 	
 	
 	
 	! !
 
 
-!PortfolioTreePrinter methodsFor: 'dd' stamp: 'OO 11/17/2022 17:08:15'!
+!PortfolioTreePrinter methodsFor: 'dd' stamp: 'OO 11/17/2022 23:55:36'!
 processPortfolio: aPortfolio
-	|accountNames indentedAccountsNames |
-
-	accountNames _ OrderedCollection new.
-	indentedAccountsNames _ OrderedCollection new.
 	
-	aPortfolio accounts do:[ :anAccount |
-		accountNames addAll: (anAccount processFor: self) ].
+	aPortfolio iterateElementsForReport: self.
 	
-	accountNames  do: [:aName | indentedAccountsNames add: '   ',aName].
-	indentedAccountsNames addFirst: aPortfolio name.
+	self indentTemporaryResult.
 	
-	^indentedAccountsNames.
+	result addFirst: aPortfolio name.
 	
 	! !
 
-!PortfolioTreePrinter methodsFor: 'dd' stamp: 'OO 11/17/2022 15:16:21'!
+!PortfolioTreePrinter methodsFor: 'dd' stamp: 'OO 11/17/2022 23:57:18'!
 processReceptiveAccount: anAccount
 
-	^OrderedCollection with: anAccount name.
+	result add: anAccount name.
 	! !
+
+
+!PortfolioTreePrinter methodsFor: 'private' stamp: 'OO 11/17/2022 23:56:34'!
+indentTemporaryResult 
+	
+	|indentedNames|
+
+	indentedNames _ OrderedCollection new.
+	result  do: [:aName | indentedNames add: '   ',aName].
+	result := indentedNames.
+	
+! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
