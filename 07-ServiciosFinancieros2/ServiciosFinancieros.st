@@ -1377,8 +1377,8 @@ TestCase subclass: #PortfolioDetailedTreePrinterTest
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Parte2'!
 
-!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'OO 11/17/2022 16:04:28'!
-test01
+!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'OO 11/18/2022 10:38:05'!
+test01CanCreatePortfolioDetailedTreePrinterReportForAnEmpyPortfolio
 
 
 	| aPortfolio aReport expectedResult |
@@ -1390,8 +1390,8 @@ test01
 	self assert: expectedResult equals: aReport yieldResult.
 	! !
 
-!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'OO 11/17/2022 16:04:34'!
-test02
+!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'OO 11/18/2022 10:38:49'!
+test02CanCreatePortfolioDetailedTreePrinterReportForAnEmpyNamedPortfolio
 
 
 	| aPortfolio aReport expectedResult |
@@ -1406,8 +1406,8 @@ test02
 	self assert: expectedResult equals: aReport yieldResult.
 	! !
 
-!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'OO 11/17/2022 16:04:39'!
-test03
+!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'OO 11/18/2022 10:40:04'!
+test03CanCreatePortfolioDetailedTreePrinterReportForAnPortolioWithAChildReceptiveAccount
 
 
 	| aPortfolio aReport expectedResult anAccount |
@@ -1425,8 +1425,8 @@ test03
 	self assert: expectedResult equals: aReport yieldResult.
 	! !
 
-!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'OO 11/17/2022 16:05:02'!
-test04
+!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'OO 11/18/2022 10:41:09'!
+test04CanCreatePortfolioDetailedTreePrinterReportForAPortolioWithTwoChildReceptiveAccount
 
 
 	| aPortfolio aReport expectedResult anAccount anAccount2 |
@@ -1446,8 +1446,8 @@ test04
 	self assert: expectedResult equals: aReport yieldResult.
 	! !
 
-!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'OO 11/17/2022 16:04:13'!
-test05
+!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'OO 11/18/2022 10:44:52'!
+test05CanCreatePortfolioDetailedTreePrinterReportForAPortolioWithChildReceptiveAccountWithARegisteredDeposit
 
 
 	| aPortfolio aReport expectedResult anAccount |
@@ -1468,8 +1468,8 @@ test05
 	self assert: expectedResult equals: aReport yieldResult.
 	! !
 
-!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'OO 11/17/2022 16:16:45'!
-test06
+!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'OO 11/18/2022 10:45:21'!
+test06CanCreatePortfolioDetailedTreePrinterReportForAPortolioWithChildReceptiveAccountWithARegisteredDepositAndWithdraw
 
 
 	| aPortfolio aReport expectedResult anAccount |
@@ -1492,8 +1492,8 @@ test06
 	self assert: expectedResult equals: aReport yieldResult.
 	! !
 
-!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'OO 11/17/2022 16:18:57'!
-test07
+!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'OO 11/18/2022 10:45:39'!
+test07CanCreatePortfolioDetailedTreePrinterReportForAPortolioWithChildReceptiveAccountWithARegisteredDepositAndTransfer
 
 
 	| aPortfolio aReport expectedResult anAccount |
@@ -1517,8 +1517,8 @@ test07
 	self assert: expectedResult equals: aReport yieldResult.
 	! !
 
-!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'OO 11/17/2022 16:24:13'!
-test08
+!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'OO 11/18/2022 10:47:54'!
+test08CanCreatePortfolioDetailedTreePrinterReportForAPortfolioWithChildPortfolio
 
 	| aPortfolio aReport expectedResult aFatherPortfolio |
 	
@@ -1535,8 +1535,8 @@ test08
 	self assert: expectedResult equals: aReport yieldResult.
 	! !
 
-!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'OO 11/17/2022 16:25:47'!
-test09
+!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'OO 11/18/2022 10:47:08'!
+test09CanCreatePortfolioDetailedTreePrinterReportForAPortfolioWithChildPortfoliowithChildReceptiveAccount
 
 	| aPortfolio aReport expectedResult aFatherPortfolio anAccount |
 	
@@ -1564,8 +1564,8 @@ TestCase subclass: #PortfolioTreePrinterReportTest
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Parte2'!
 
-!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/16/2022 16:33:41'!
-test01
+!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/18/2022 10:48:51'!
+test01CanCreateReceptiveAccountWithAName
 
 
 	| anAccount |
@@ -1573,8 +1573,8 @@ test01
 	
 	self assert: 'Cuenta de Juan' equals: anAccount name.! !
 
-!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/16/2022 16:37:26'!
-test02
+!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/18/2022 10:49:13'!
+test02CanCreateReceptiveAccountWithADifferentName
 
 
 	| anAccount |
@@ -1582,8 +1582,8 @@ test02
 	
 	self assert: 'Cuenta de Angeles' equals: anAccount name.! !
 
-!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/16/2022 16:38:26'!
-test03
+!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/18/2022 10:49:41'!
+test03CanCreatePortfolioWithAName
 
 
 	| aPortfolio |
@@ -1591,8 +1591,8 @@ test03
 	
 	self assert: 'Portfolio de hijos' equals: aPortfolio name.! !
 
-!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/16/2022 16:51:28'!
-test04
+!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/18/2022 10:50:24'!
+test04CanCreatePortfolioWithANameAndAChildAccount
 
 
 	| aPortfolio anAccount |
@@ -1602,8 +1602,8 @@ test04
 	self assert: 'Portfolio de la Familia' equals: aPortfolio name.
 	self assert: (aPortfolio accountsIncludes: anAccount).! !
 
-!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/16/2022 17:01:50'!
-test05
+!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/18/2022 10:50:56'!
+test05CanCreatePortfolioWithANameWithAChildAccountAndAChildPorfolio
 
 	| aPortfolio anAccount aFatherPortfolio |
 	anAccount _ ReceptiveAccount named: 'Cuenta de Juan'.
@@ -1615,22 +1615,22 @@ test05
 	self assert: (aFatherPortfolio accountsIncludes: anAccount).
 	self assert: (aFatherPortfolio accountsIncludes: aPortfolio).! !
 
-!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/16/2022 17:05:32'!
-test06
+!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/18/2022 10:51:36'!
+test06CanCreateAReceptiveAccountWithoutANameAndTheNameIsEmpty
 	| anAccount |
 	anAccount _ ReceptiveAccount new.
 	self assert:  '' equals: anAccount name.
 	! !
 
-!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/16/2022 17:05:56'!
-test07
+!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/18/2022 10:52:19'!
+test07CanCreateAPortfolioWithoutANameAndTheNameIsEmpty
 	| aPortfolio |
 	aPortfolio _ Portfolio new.
 	self assert:  '' equals: aPortfolio name.
 	! !
 
-!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/17/2022 13:50:22'!
-test08
+!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/18/2022 10:53:00'!
+test08CanCreateAPortfolioTreePrinterForAEmptyPortfolioAndTheResultIsTheExpected
 
 
 	| aPortfolio aReport |
@@ -1641,8 +1641,8 @@ test08
 	self assert: (OrderedCollection with: '') equals: aReport yieldResult.
 	! !
 
-!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/17/2022 13:50:37'!
-test09
+!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/18/2022 10:53:28'!
+test09CanCreateAPortfolioTreePrinterForAEmptyPortfolioWithANameAndTheResultIsTheExpected
 
 
 	| aPortfolio aReport |
@@ -1653,8 +1653,8 @@ test09
 	self assert: (OrderedCollection with: 'Portfolio de la Familia') equals: aReport yieldResult.
 	! !
 
-!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/17/2022 14:06:43'!
-test10
+!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/18/2022 10:54:13'!
+test10CanCreateAPortfolioTreePrinterForAPortfolioWithChildReceptiveAccountAndTheResultIsTheExpected
 
 	| aPortfolio aReport anAccount  expectedResult |
 	anAccount _ ReceptiveAccount named: 'Cuenta de Juan'.
@@ -1667,8 +1667,8 @@ test10
 	self assert:  expectedResult equals: aReport yieldResult.
 	! !
 
-!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/17/2022 14:11:16'!
-test11
+!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/18/2022 10:54:51'!
+test11CanCreateAPortfolioTreePrinterForAPortfolioWithTwoChildReceptiveAccountsAndTheResultIsTheExpected
 
 	| aPortfolio aReport anAccount  expectedResult anAccount2 |
 	anAccount _ ReceptiveAccount named: 'Cuenta de Juan'.
@@ -1685,8 +1685,8 @@ test11
 	self assert:  expectedResult equals: aReport yieldResult.
 	! !
 
-!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/17/2022 15:02:11'!
-test12
+!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/18/2022 10:55:31'!
+test12CanCreateAPortfolioTreePrinterForAPortfolioWithChildReceptiveAccountAndChildPortfolioAndTheResultIsTheExpected
 
 	| aPortfolio aReport anAccount  expectedResult aFatherPortfolio |
 	
@@ -1703,8 +1703,8 @@ test12
 	self assert:  expectedResult equals: aReport yieldResult.
 	! !
 
-!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/17/2022 15:25:37'!
-test13
+!PortfolioTreePrinterReportTest methodsFor: 'tests' stamp: 'OO 11/18/2022 10:56:02'!
+test13CanNotCreatePortfolioTreePrinterReportForAReceptiveAccount
 
 	| aReport anAccount  |
 	
@@ -1871,8 +1871,9 @@ initializeWith: anAccount
 	self registerInResultTheTransfersValuesOf: anAccount.! !
 
 
-!NetTransferReport methodsFor: 'dd' stamp: 'OO 11/17/2022 23:27:25'!
+!NetTransferReport methodsFor: 'dd' stamp: 'OO 11/18/2022 00:41:32'!
 processDeposit: aDeposit
+	
 ! !
 
 !NetTransferReport methodsFor: 'dd' stamp: 'OO 11/17/2022 23:26:44'!
