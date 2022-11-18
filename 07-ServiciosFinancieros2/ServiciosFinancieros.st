@@ -540,10 +540,6 @@ accept: aReport
 	^aReport processPortfolio: self.
 	! !
 
-!Portfolio methodsFor: 'private' stamp: 'OO 11/17/2022 15:14:33'!
-accounts
-	^accounts copy.! !
-
 !Portfolio methodsFor: 'private' stamp: 'HAW 5/25/2019 11:42:55'!
 addTransactionsTo: aCollectionOfTransactions
 
